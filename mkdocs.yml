@@ -1,0 +1,87 @@
+site_name: Release-as-Knowledge (R2K)
+site_description: Release-as-Knowledge (R2K) turns every software release from a binary handoff into a structured, machine-indexable knowledge transfer. 4 levels, 8 principles, Mode A/B AB plan. CC BY 4.0.
+site_author: Ted Enjtorian
+site_url: https://enjtorian.github.io/release-as-knowledge
+site_keywords: Release-as-Knowledge, R2K, Manifesto, OCI, SBOM, OpenAPI, change manifest, diff plugin, semantic release layer
+
+repo_name: Release-as-Knowledge
+repo_url: https://github.com/enjtorian/release-as-knowledge
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  language: en
+  palette:
+    # Light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+  icon:
+    repo: fontawesome/brands/github
+  javascript:
+    - https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js
+
+plugins:
+  - search
+  - mermaid2
+
+markdown_extensions:
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - admonition
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+  - tables
+  - footnotes
+
+extra:
+  alternate:
+    - name: English
+      link: /release-as-knowledge/
+      lang: en
+    - name: 繁體中文
+      link: /release-as-knowledge/zh-tw/
+      lang: zh-tw
+
+nav:
+  - Home: index.md
+  - Manifesto: manifesto.md
+  - Quick Start: quickstart.md
+  - FAQ: faq.md
+  - Glossary: glossary.md
+  - 繁體中文:
+    - 首頁: zh-tw/index.md
+    - Manifesto: zh-tw/manifesto.md
+    - 快速入門: zh-tw/quickstart.md
+    - 常見問題: zh-tw/faq.md
+    - 術語表: zh-tw/glossary.md

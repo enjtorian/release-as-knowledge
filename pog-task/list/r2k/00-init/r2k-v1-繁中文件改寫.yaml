@@ -1,0 +1,182 @@
+type: task
+id: f1b38d0b-0667-43e1-beb2-c949053c5b4e
+title: R2K v1 繁中文件改寫與 Manifesto 重新落位
+description: |
+  以 R2K v1 為基準（v1/v2 皆視為 draft，當前重整為 v1）改寫專案繁體中文文件。
+  將 R2K 從「以 binary 為主的 release 模式」重新定位為「四階段推薦進程」：
+    1. Docker LABEL（L1 Identity / 5 行起步）
+    2. 重要資產保存（L2 State：OpenAPI、DB schema、config/env、SBOM 等自動化收集）
+    3. 對不同資產提供 diff 與簡易洞察（L3 Change，需要多種 diff plugin）
+    4. 提供 insights 與分析（L3+ 整合：跨資產關聯、風險推理）
+  在不同層提供對應的工具與 valid 機制；針對 diff 設計 Mode A（pre-computed） / Mode B（on-demand）的 AB plan。
+
+  本任務輸出：
+  - 改寫 README.zh-tw.md
+  - 改寫 docs/zh-tw/index.md, faq.md, glossary.md, quickstart.md
+  - 將 Manifesto 重新撰寫並放置於 docs/ 下（含中英版位置設計）
+  - 修改 AUTHORS.zh-tw.md
+  - 更新 mkdocs.yml 導覽
+  - 以繁體中文版為主
+category: doc
+priority: high
+status: in_review
+created_at: '2026-05-03T00:00:00.000Z'
+started_at: '2026-05-03T00:00:00.000Z'
+completed_at: null
+estimated_hours: 6
+actual_hours: 4
+claimed_by: claude-opus-4-7
+claimed_at: '2026-05-03T00:00:00.000Z'
+related_files:
+  - README.zh-tw.md
+  - README.md
+  - AUTHORS.zh-tw.md
+  - AUTHORS.md
+  - SIGNATURES.md
+  - docs/zh-tw/index.md
+  - docs/zh-tw/faq.md
+  - docs/zh-tw/glossary.md
+  - docs/zh-tw/quickstart.md
+  - docs/zh-tw/manifesto.md
+  - docs/index.md
+  - docs/faq.md
+  - docs/glossary.md
+  - docs/quickstart.md
+  - docs/manifesto.md
+  - mkdocs.yml
+dependencies: []
+blocking: []
+tags:
+  - r2k
+  - doc
+  - zh-tw
+  - manifesto
+  - v1
+checklist:
+  - text: 建立 task YAML 與 record.md
+    completed: true
+  - text: 閱讀 Manifesto / chatgpt-temp-6, 7 / index.html / 既有 docs
+    completed: true
+  - text: 改寫 README.zh-tw.md（融入四階段推薦進程 + AB plan）
+    completed: true
+  - text: 改寫 docs/zh-tw/index.md
+    completed: true
+  - text: 改寫 docs/zh-tw/quickstart.md（依 L1→L4 的推薦進程）
+    completed: true
+  - text: 改寫 docs/zh-tw/faq.md
+    completed: true
+  - text: 改寫 docs/zh-tw/glossary.md
+    completed: true
+  - text: 重寫 Manifesto 至 docs/zh-tw/manifesto.md（與英文版共置）
+    completed: true
+  - text: 修改 AUTHORS.zh-tw.md
+    completed: true
+  - text: 更新 mkdocs.yml 導覽
+    completed: true
+  - text: 執行 python3 pog-task.py 校驗
+    completed: true
+  - text: 將 status 更新為 in_review 並補 walkthrough
+    completed: true
+parent_task: null
+record_path: record/f1b38d0b-0667-43e1-beb2-c949053c5b4e/record.md
+context_files:
+  - 00-idea/r2k-v2/manifesto/R2K-Manifesto-en.md
+  - 00-idea/r2k-v2/manifesto/R2K-Manifesto-zh.md
+  - 00-idea/r2k-github-repo/site/index.html
+  - 00-idea/chatgpt/chatgpt-temp-6.md
+  - 00-idea/chatgpt/chatgpt-temp-7.md
+  - 00-idea/r2k-v2/ARCHITECTURE-SPEC-v0.3.md
+  - 00-idea/r2k-v2/MIGRATION-v1-to-v2.md
+original_prompt: |
+  auto mode , 不要詢問 持續執行
+
+  Step 4 本次任務：
+  我所想像的 R2K：引導目前 release 主要以 binary 釋出為主的模式改良成不同步驟的推薦進程
+    1. docker label
+    2. 保存重要的資產 ex openapi.json, db schema, config setting env, SBOM 等等的資訊（這步驟需要許多自動化收集）
+    3. 提出 diff for 不同的資產，然後可以提供簡易的洞察（這步驟需要許多 diff plugin）
+    4. 提供 insights, 洞察分析（就會需要各種對於 3 的分析 呈現整合）
+  在不同層可以提供對應的工具與 valid。
+  把上述的理念視為重點，優化語句融入到目標的文件中。
+  注意：之前的演進版本都視為 draft，目前調整的版本就是 v1，所以就是針對 diff 有 AB plan。
+
+  閱讀 00-idea/r2k-v2/manifesto/R2K-Manifesto-en.md
+  閱讀 00-idea/r2k-github-repo/site/index.html
+  閱讀 00-idea/chatgpt/chatgpt-temp-6.md, chatgpt-temp-7.md
+
+  目標：
+  改寫 README.zh-tw.md 撰寫完整的介紹
+  改寫 docs/zh-tw/index.md 撰寫完整的介紹, faq.md, glossary.md, quickstart.md
+  重寫 Manifesto 放置在 docs/ 下 設計放置的位置
+  修改 AUTHORS.zh-tw.md
+  以繁體中文版為主
+notes: |
+  - v1/v2 草稿並存於 00-idea/，本次重整為「正式 v1」基準。
+  - 文件統一使用「四階段推薦進程」當作敘事主軸：Identify → Trust → Understand → Share。
+  - L3 的 Mode A / Mode B 視為 v1 的 AB plan，文件需明確點出選擇邏輯。
+  - 為 mkdocs 導覽新增 manifesto 條目（中英並存）。
+history:
+  - timestamp: '2026-05-03T00:00:00.000Z'
+    agent: claude-opus-4-7
+    action: created
+    message: 建立 r2k/00-init 下的 R2K v1 繁中文件改寫任務
+  - timestamp: '2026-05-03T00:00:00.000Z'
+    agent: claude-opus-4-7
+    action: claimed
+    message: Claude Opus 4.7 認領，開始閱讀 context 並產出 record.md
+  - timestamp: '2026-05-03T00:30:00.000Z'
+    agent: claude-opus-4-7
+    action: progress
+    message: 'commit 8ae9beb 改寫 README.zh-tw.md：四階段推薦進程 + Mode A/B AB plan'
+  - timestamp: '2026-05-03T01:15:00.000Z'
+    agent: claude-opus-4-7
+    action: progress
+    message: 'commit 2673d3f 改寫 docs/zh-tw {index, quickstart, faq, glossary}.md'
+  - timestamp: '2026-05-03T01:45:00.000Z'
+    agent: claude-opus-4-7
+    action: progress
+    message: 'commit 1e13369 落地 R2K Manifesto v1 至 docs/manifesto.md（en）與 docs/zh-tw/manifesto.md（zh-tw）'
+  - timestamp: '2026-05-03T02:00:00.000Z'
+    agent: claude-opus-4-7
+    action: progress
+    message: 'commit 4770871 改寫 AUTHORS.zh-tw.md，並把 mkdocs.yml site 與 nav 更新為 R2K（含 Manifesto 中英入口）'
+  - timestamp: '2026-05-03T02:15:00.000Z'
+    agent: claude-opus-4-7
+    action: progress
+    message: 'status → in_review；補完 record.md walkthrough；pog-task validator 通過'
+  - timestamp: '2026-05-03T02:30:00.000Z'
+    agent: claude-opus-4-7
+    action: progress
+    message: 'OCI label namespace 由 org.r2k.* 改為 dev.r2k-ai.*（README.zh-tw、index、quickstart、glossary）'
+  - timestamp: '2026-05-03T03:00:00.000Z'
+    agent: claude-opus-4-7
+    action: progress
+    message: 'quickstart Step 1 補上每個 label 說明，並新增 OCI 標準 label（org.opencontainers.image.*）與 R2K 專屬 label 兩組對照'
+  - timestamp: '2026-05-03T03:30:00.000Z'
+    agent: claude-opus-4-7
+    action: progress
+    message: 'quickstart Step 2 加入 /r2k/index.yaml 設計（schema r2k.dev/index/v1、必填/選填欄位、與 OCI/CycloneDX 對齊）；Step 3 補上 Mode A 完整 label 表；同步更新 glossary L1 與 index.yaml 條目'
+  - timestamp: '2026-05-03T04:00:00.000Z'
+    agent: claude-opus-4-7
+    action: progress
+    message: '依用戶指示 (1) 移除 Manifesto 中英版的「v1 收斂草稿」說明與「演進歷史」段落 (2) 由 00-idea/r2k-github-repo/SIGNATURES.md 衍生並落地 SIGNATURES.md 至 repo 根目錄（中英並陳，移除 v1→v2 過渡敘事）(3) 依繁中版本撰寫對應 en：README.md、AUTHORS.md、docs/{index,quickstart,faq,glossary}.md'
+  - timestamp: '2026-05-03T04:30:00.000Z'
+    agent: claude-opus-4-7
+    action: progress
+    message: 'domain 由 r2k.dev 改為 releaseasknowledge.dev（quickstart 中英版 spec.url / index.yaml schema、glossary 中英版 index.yaml 條目）'
+  - timestamp: '2026-05-03T04:45:00.000Z'
+    agent: claude-opus-4-7
+    action: progress
+    message: 'OCI label namespace 由 dev.r2k-ai.* 改為 dev.releaseasknowledge.* 對齊新 domain（README/docs 中英 8 檔，89 處）'
+  - timestamp: '2026-05-03T05:00:00.000Z'
+    agent: claude-opus-4-7
+    action: progress
+    message: 'AUTHORS.zh-tw.md 致謝段移除 v2 字樣（v1 / v2 草稿 → 早期草稿），與 Manifesto 不揭露 draft 演進的策略一致'
+  - timestamp: '2026-05-03T05:30:00.000Z'
+    agent: claude-opus-4-7
+    action: progress
+    message: '主標題改為 Release-as-Knowledge，R2K 改為縮寫/副標：所有 H1（README/AUTHORS/SIGNATURES/docs 中英共 14 處）、所有 *Release-as-Knowledge ... CC BY 4.0* 落款、mkdocs site_name 與 repo_name 同步調整；並把 GitHub Pages site_url / 文件中的 enjtorian.github.io/r2k 改為 enjtorian.github.io/release-as-knowledge（mkdocs alternate links 同步）'
+  - timestamp: '2026-05-03T06:00:00.000Z'
+    agent: claude-opus-4-7
+    action: progress
+    message: 'CHANGELOG.md 重寫為 Release-as-Knowledge (R2K) 1.0.0 / 2026-05 首次公開版，按 L1-L4、Manifesto、文件、metadata 分段條列；採 Keep a Changelog + SemVer 風格'
