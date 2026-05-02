@@ -180,3 +180,7 @@ history:
     agent: claude-opus-4-7
     action: progress
     message: 'CHANGELOG.md 重寫為 Release-as-Knowledge (R2K) 1.0.0 / 2026-05 首次公開版，按 L1-L4、Manifesto、文件、metadata 分段條列；採 Keep a Changelog + SemVer 風格'
+  - timestamp: '2026-05-03T06:30:00.000Z'
+    agent: claude-opus-4-7
+    action: progress
+    message: '把中文正式名稱「軟體發布即知識傳遞」埋入全部 8 個 zh-tw 文件（README、AUTHORS、SIGNATURES、docs/zh-tw/{index,quickstart,faq,glossary,manifesto}.md），統一中文敘事'

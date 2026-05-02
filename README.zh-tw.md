@@ -5,6 +5,7 @@
 ![Status](https://img.shields.io/badge/status-public%20draft-B7791F.svg)
 
 > 把每一次 release 從「丟一個 binary」升級成「一次結構化、可機器索引、可回溯的知識傳遞」。
+> R2K 中文正式名稱 ──「**軟體發布即知識傳遞**」。
 
 🌐 **網站**: <https://enjtorian.github.io/release-as-knowledge>
 📜 **Manifesto**: [docs/zh-tw/manifesto.md](./docs/zh-tw/manifesto.md) ・ [English](./docs/manifesto.md)

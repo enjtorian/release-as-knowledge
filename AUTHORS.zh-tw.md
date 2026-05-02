@@ -1,5 +1,7 @@
 # 作者與貢獻者 · Release-as-Knowledge v1
 
+> R2K（Release-as-Knowledge · **軟體發布即知識傳遞**）
+
 ## 主要作者
 
 **Ted Enjtorian**
@@ -10,7 +12,7 @@
 
 ### 貢獻內容
 
-- **框架構想與理論**：辨識出「軟體 release 缺少語義層」這個被多方工具切碎的核心缺口，並把它命名為 R2K（Release-as-Knowledge）。
+- **框架構想與理論**：辨識出「軟體 release 缺少語義層」這個被多方工具切碎的核心缺口，並把它命名為 R2K（Release-as-Knowledge），中文定名為「**軟體發布即知識傳遞**」。
 - **四階段推薦進程**：把 R2K 從一個概念整理成可漸進採用的 4 個 Level — LABEL → Snapshot → Diff → Insight，對齊 SLSA tier 的精神。
 - **Manifesto 與 AB plan**：撰寫 R2K Manifesto v1（8 條原則），並針對 L3 計算時機提出 Mode A（pre-computed）/ Mode B（on-demand）雙模式設計。
 - **規格與文件**：英文 / 繁中規格、Quickstart、FAQ、Glossary、Manifesto 等核心文件的撰寫與架構設計。

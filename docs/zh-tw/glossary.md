@@ -1,13 +1,15 @@
 # 術語表（Glossary） · Release-as-Knowledge v1
 
-R2K 規格中所使用術語的綜合定義。
+R2K（**Release-as-Knowledge · 軟體發布即知識傳遞**）規格中所使用術語的綜合定義。
 
 ---
 
 ## 一、最上位概念
 
-### R2K（Release-as-Knowledge）
+### R2K（Release-as-Knowledge · 軟體發布即知識傳遞）
 一個語義標準，把每一次 release 從「不可被機器理解的 binary」升級為**結構化、可機器索引、可推理的知識物件**。R2K v1 採用「四階段推薦進程」（LABEL → Snapshot → Diff → Insight），對應 4 個 Level，每一層可獨立宣告達成。
+
+> 「軟體發布即知識傳遞」是 R2K 的中文正式名稱，貫穿整份規格的核心主張。
 
 ### 四階段推薦進程（4-Step Adoption Path）
 R2K v1 的核心採用模型：

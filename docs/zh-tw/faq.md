@@ -1,6 +1,6 @@
 # 常見問題（FAQ） · Release-as-Knowledge v1
 
-關於 R2K（Release-as-Knowledge）的常見問題。
+關於 R2K（**Release-as-Knowledge · 軟體發布即知識傳遞**）的常見問題。
 
 ---
 
@@ -8,7 +8,7 @@
 
 ### Q：R2K 是什麼？
 
-R2K（**Release-as-Knowledge**）是一個語義標準，把每一次軟體 release 從「不可被機器理解的 binary」升級為**結構化、可機器索引、可推理的知識物件**。
+R2K（**Release-as-Knowledge**，中文：**軟體發布即知識傳遞**）是一個語義標準，把每一次軟體 release 從「不可被機器理解的 binary」升級為**結構化、可機器索引、可推理的知識物件**。
 
 它由四個漸進採用的階段組成：
 

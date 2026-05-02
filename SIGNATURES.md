@@ -54,6 +54,7 @@ Optional commentary in 1-2 sentences if you want to explain why you signed.
 
 # Release-as-Knowledge 簽署人（繁體中文）
 
+> R2K = **軟體發布即知識傳遞**。
 > 這份名單記錄認同 R2K Manifesto 方向的個人與組織。
 > 簽署代表你同意核心論點 ── 軟體 release 應該傳遞知識，不只是 binary。
 > 簽署**不代表**你已經實作 R2K。
