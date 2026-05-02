@@ -1,0 +1,119 @@
+# POG 任務管理系統
+
+專案的任務管理系統，支援多 LLM Agent 協作。
+
+> **POG Task 是一個 AI 原生的任務治理層 (Governance Layer)，確保任務意圖可被 AI 解釋、執行與審計。**
+
+## 📁 目錄結構
+
+```
+pog-task/
+├── README.md          # 本文件 - 系統總覽
+├── task.schema.json   # YAML 格式校驗定義
+├── pog-task.py        # 任務校驗工具
+├── pog-task-agent-instructions.md # Agent 操作指南
+├── pog-task-design.md # 系統設計
+└── list/              # 實際任務列表 (按專案/模組分層)
+    └── {project}/
+        └── {module}/
+            ├── {task-title}.yaml
+            └── record/{uuid}/record.md
+```
+
+## 🚀 快速開始
+
+### 對於 LLM Agent 🤖
+1. 閱讀 **[Agent 指南](./pog-task-agent-instructions.md)** - 操作規範和結構說明
+2. 查看 **[任務列表](./list/)** - 了解實際任務範例
+3. 開始工作 - 選擇適合的任務類型
+
+### 對於開發者 👨‍💻
+1. 閱讀 **[系統設計](./pog-task-design.md)** - 系統概念 and 設計
+2. 安裝依賴並執行校驗：
+   ```bash
+   pip install PyYAML jsonschema --break-system-packages --user
+   python3 pog-task.py
+   ```
+3. 開始使用 - 建立或認領任務
+
+## 🛒 工具支援
+
+推薦使用 VS Code Extension 來管理任務：
+[**POG Task Manager**](https://marketplace.visualstudio.com/items?itemName=enjtorian.pog-task-manager)
+
+## ✨ 核心特性
+
+- ✅ **YAML 格式** - 單個任務獨立檔案，易於閱讀與版本控制
+- ✅ **UUID 識別** - 全域唯一，支援分散式協作
+- ✅ **Schema 校驗** - 使用 JSON Schema 確保任務格式正確
+- ✅ **分層管理** - 按 `{project}/{module}` 結構化管理
+- ✅ **多 Agent** - 多個 AI Agent 可同時協作
+
+## 📂 目錄與檔案命名
+
+### 檔案路徑格式
+
+```
+pog-task/list/{project}/{module}/{task-title}.yaml
+```
+
+**組成部分**：
+- `{project}` - 專案名稱 (如 `common`, `pog`)
+- `{module}` - 模組名稱 (如 `improve`, `init`)
+- `{task-title}` - 任務標題，作為檔案名稱
+
+### 常用目錄結構
+
+| 專案 | 模組 | 說明 |
+|------|---------|------|
+| `common` | `improve` | 一般優化與開發任務 |
+| `pog` | `core` | 核心功能 |
+| `alpha` | `activate` | 啟動或實驗性任務 |
+
+## 📋 任務結構
+
+每個 YAML 檔案包含單個任務對象，包含以下必填欄位：
+- `type`: "task"
+- `id`: UUID v4
+- `title`: 標題
+- `status`: 狀態
+- `created_at`: 建立時間
+
+詳細結構請參考：[系統設計](./pog-task-design.md)
+
+## 🎯 任務記錄
+
+任務執行記錄存放於該模組下的 record 目錄：
+
+```
+pog-task/list/{project}/{module}/record/{task-uuid}/record.md
+```
+
+這是用於記錄詳細的執行過程、技術決策和產出物的最佳實踐。
+
+## 📖 文檔
+
+- **[Agent 指南](./pog-task-agent-instructions.md)** - Agent 操作規範和範例
+- **[系統設計](./pog-task-design.md)** - 詳細設計與 Schema 說明
+
+## 🤝 操作流程
+
+1. **路徑選擇** - 根據專案與模組建立目錄
+2. **建立任務** - 建立新的 `.yaml` 檔案內容
+3. **認領任務** - 更新 `claimed_by` 和 `status`
+4. **校驗格式** - 執行 `python3 pog-task.py` 確保格式正確
+5. **更新狀態** - 標記為 completed 並填寫實際工時
+
+## 💡 設計原則
+
+1. **檔案原子化** - 一個任務一個檔案，避免競爭衝突
+2. **結構清晰** - 強制執行分層目錄管理
+3. **格式嚴謹** - 透過 Schema 進行自動化檢核
+4. **Agent 友好** - 適合 AI Agent 自動處理與檢核進度
+
+## 📊 版本
+
+- **版本**: 1.1.0 (Refactored to YAML)
+- **更新**: February 2026
+
+---

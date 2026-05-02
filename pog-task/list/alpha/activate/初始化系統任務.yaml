@@ -1,0 +1,17 @@
+type: task
+id: 00000000-0000-0000-0000-000000000000
+title: 初始化系統任務
+description: 這是系統自動生成的初始化任務
+category: feature
+priority: medium
+status: pending
+created_at: '2026-05-02T15:23:48.975Z'
+checklist:
+  - text: 確認系統環境
+    completed: false
+history:
+  - timestamp: '2026-05-02T15:23:48.975Z'
+    agent: system
+    action: created
+    message: 系統初始化生成
+record_path: record/00000000-0000-0000-0000-000000000000/record.md

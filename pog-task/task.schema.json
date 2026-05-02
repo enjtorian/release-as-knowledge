@@ -1,0 +1,217 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "POG Task Schema",
+    "type": "object",
+    "required": [
+        "type",
+        "id",
+        "title",
+        "status",
+        "created_at"
+    ],
+    "properties": {
+        "type": {
+            "type": "string",
+            "const": "task"
+        },
+        "id": {
+            "type": "string",
+            "description": "Unique identifier"
+        },
+        "title": {
+            "type": "string",
+            "description": "Short title of the task"
+        },
+        "description": {
+            "type": "string",
+            "description": "Detailed description of the task"
+        },
+        "category": {
+            "type": "string",
+            "enum": [
+                "feature",
+                "bugfix",
+                "refactor",
+                "test",
+                "doc",
+                "research",
+                "review",
+                "chore",
+                "improvement",
+                "design"
+            ],
+            "description": "Category of the task"
+        },
+        "priority": {
+            "type": "string",
+            "enum": [
+                "low",
+                "medium",
+                "high",
+                "urgent"
+            ],
+            "description": "Priority level"
+        },
+        "status": {
+            "type": "string",
+            "enum": [
+                "pending",
+                "in_design",
+                "in_planning",
+                "in_progress",
+                "in_review",
+                "blocked",
+                "completed",
+                "cancelled"
+            ],
+            "description": "Current status of the task"
+        },
+        "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Time when the task was created"
+        },
+        "started_at": {
+            "type": [
+                "string",
+                "null"
+            ],
+            "format": "date-time",
+            "description": "Time when the task was started"
+        },
+        "completed_at": {
+            "type": [
+                "string",
+                "null"
+            ],
+            "format": "date-time",
+            "description": "Time when the task was completed"
+        },
+        "estimated_hours": {
+            "type": "number",
+            "description": "Estimated time to complete the task in hours"
+        },
+        "actual_hours": {
+            "type": "number",
+            "description": "Actual time spent on the task in hours"
+        },
+        "claimed_by": {
+            "type": [
+                "string",
+                "null"
+            ],
+            "description": "Agent or user who claimed the task"
+        },
+        "claimed_at": {
+            "type": [
+                "string",
+                "null"
+            ],
+            "format": "date-time",
+            "description": "Time when the task was claimed"
+        },
+        "related_files": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "List of related files"
+        },
+        "dependencies": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "IDs of tasks this task depends on"
+        },
+        "blocking": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "IDs of tasks this task blocks"
+        },
+        "tags": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "Arbitrary tags for categorization"
+        },
+        "checklist": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "text",
+                    "completed"
+                ],
+                "properties": {
+                    "text": {
+                        "type": "string"
+                    },
+                    "completed": {
+                        "type": "boolean"
+                    }
+                }
+            }
+        },
+        "parent_task": {
+            "type": [
+                "string",
+                "null"
+            ],
+            "description": "ID of the parent task"
+        },
+        "notes": {
+            "type": "string",
+            "description": "Additional notes"
+        },
+        "record_path": {
+            "type": "string",
+            "description": "Relative path to the record file (e.g. record/{uuid}/record.md)"
+        },
+        "context_files": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "List of files that provide context for this task"
+        },
+        "original_prompt": {
+            "type": [
+                "string",
+                "null"
+            ],
+            "description": "The original prompt that created this task"
+        },
+        "history": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "timestamp",
+                    "agent",
+                    "action",
+                    "message"
+                ],
+                "properties": {
+                    "timestamp": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "agent": {
+                        "type": "string"
+                    },
+                    "action": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    },
+    "additionalProperties": false
+}
