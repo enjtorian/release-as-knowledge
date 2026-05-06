@@ -73,6 +73,8 @@ LABEL org.opencontainers.image.source="https://github.com/your-org/your-repo"
 LABEL com.releaseasknowledge.version="1.0"
 LABEL com.releaseasknowledge.level="1"
 LABEL com.releaseasknowledge.commit="${COMMIT_SHA}"
+LABEL com.releaseasknowledge.branch="${GIT_BRANCH}"
+LABEL com.releaseasknowledge.tag="${GIT_TAG}"
 LABEL com.releaseasknowledge.build-time="${BUILD_TIME}"
 ```
 

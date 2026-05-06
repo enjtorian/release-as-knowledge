@@ -78,6 +78,8 @@ The `com.releaseasknowledge.*` group only covers "things specific to R2K" — wh
 | `com.releaseasknowledge.version` | ✅ | The **R2K spec version** this image follows | `1.0` |
 | `com.releaseasknowledge.level` | ✅ | Self-declared R2K level (`1` / `2` / `3` / `4`) | `1` |
 | `com.releaseasknowledge.commit` | ✅ | Source commit SHA (same value as `org.opencontainers.image.revision`, kept here so R2K tools can look it up directly) | `${COMMIT_SHA}` |
+| `com.releaseasknowledge.branch` | ◯ | source git branch；diff/insight 用來判斷 release line（hotfix / main / release-x.y）| `main` 或 `release/2.4.x` |
+| `com.releaseasknowledge.tag` | ◯ | source git tag；單一 tag 直接寫，多個用逗號分隔；無 tag 則省略 | `v2.4.1` 或 `v2.4.1,latest` |
 | `com.releaseasknowledge.build-time` | ✅ | Build time of the R2K manifest (RFC 3339) | `${BUILD_TIME}` |
 | `com.releaseasknowledge.repo` | ◯ | Source repo URL (used by diff / insight to fetch context) | `https://github.com/your-org/your-repo` |
 | `com.releaseasknowledge.snapshot.path` | ◯ | Where the L2 snapshot lives in the image (defaults to `/r2k`) | `/r2k` |
@@ -96,6 +98,8 @@ Append the R2K-specific block right after the OCI labels:
 LABEL com.releaseasknowledge.version="1.0"
 LABEL com.releaseasknowledge.level="1"
 LABEL com.releaseasknowledge.commit="${COMMIT_SHA}"
+LABEL com.releaseasknowledge.branch="${GIT_BRANCH}"
+LABEL com.releaseasknowledge.tag="${GIT_TAG}"
 LABEL com.releaseasknowledge.build-time="${BUILD_TIME}"
 LABEL com.releaseasknowledge.repo="https://github.com/your-org/your-repo"
 LABEL com.releaseasknowledge.spec.url="https://releaseasknowledge.com/spec/v1"

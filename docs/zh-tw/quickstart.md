@@ -78,6 +78,8 @@ LABEL org.opencontainers.image.authors="team@your-org.example"
 | `com.releaseasknowledge.version` | ✅ | 這顆 image 遵循的 **R2K 規格版本** | `1.0` |
 | `com.releaseasknowledge.level` | ✅ | 自我宣告達到的 R2K Level（`1` / `2` / `3` / `4`） | `1` |
 | `com.releaseasknowledge.commit` | ✅ | source commit SHA（與 `org.opencontainers.image.revision` 同值，但保留給 R2K 工具直接查） | `${COMMIT_SHA}` |
+| `com.releaseasknowledge.branch` | ◯ | source git branch；diff/insight 用來判斷 release line（hotfix / main / release-x.y）| `main` 或 `release/2.4.x` |
+| `com.releaseasknowledge.tag` | ◯ | source git tag；單一 tag 直接寫，多個用逗號分隔；無 tag 則省略 | `v2.4.1` 或 `v2.4.1,latest` |
 | `com.releaseasknowledge.build-time` | ✅ | R2K manifest 的 build 時間（RFC 3339） | `${BUILD_TIME}` |
 | `com.releaseasknowledge.repo` | ◯ | source repo URL（diff / insight 抓上下文用） | `https://github.com/your-org/your-repo` |
 | `com.releaseasknowledge.snapshot.path` | ◯ | L2 snapshot 在 image 內的路徑（預設 `/r2k`） | `/r2k` |
@@ -95,6 +97,8 @@ LABEL org.opencontainers.image.authors="team@your-org.example"
 LABEL com.releaseasknowledge.version="1.0"
 LABEL com.releaseasknowledge.level="1"
 LABEL com.releaseasknowledge.commit="${COMMIT_SHA}"
+LABEL com.releaseasknowledge.branch="${GIT_BRANCH}"
+LABEL com.releaseasknowledge.tag="${GIT_TAG}"
 LABEL com.releaseasknowledge.build-time="${BUILD_TIME}"
 LABEL com.releaseasknowledge.repo="https://github.com/your-org/your-repo"
 LABEL com.releaseasknowledge.spec.url="https://releaseasknowledge.com/spec/v1"
