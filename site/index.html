@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Release-as-Knowledge (R2K) · 軟體發布即知識傳遞 · v1</title>
+<meta name="description" content="Release-as-Knowledge (R2K) — 軟體發布即知識傳遞。8 條原則 · 4 個 Level（Identify / Trust / Understand / Share）· Mode A/B 雙模式。CC BY 4.0。">
+<meta name="version" content="1.0">
+
+<meta property="og:title" content="Release-as-Knowledge (R2K) · 軟體發布即知識傳遞">
+<meta property="og:description" content="把每一次 release 從「丟一個 binary」升級成「結構化、可機器索引、可回溯的知識傳遞」。8 條原則 · 4 個 Level · Mode A/B 雙模式。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://releaseasknowledge.com/">
+<meta property="og:image" content="https://releaseasknowledge.com/og-manifesto.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Release-as-Knowledge · 軟體發布即知識傳遞">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://releaseasknowledge.com/og-manifesto.png">
+
+<link rel="alternate" hreflang="zh-Hant" href="https://releaseasknowledge.com/">
+<link rel="alternate" hreflang="en" href="https://releaseasknowledge.com/en/">
+<link rel="canonical" href="https://releaseasknowledge.com/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32">
+<link rel="icon" href="/favicon-128.png" sizes="128x128">
+<link rel="apple-touch-icon" href="/favicon-512.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Fraunces:ital,wght@1,500&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&family=Noto+Serif+TC:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --paper: #F8F5F0;
+  --paper-deep: #F0EBE2;
+  --ink: #1A1A1A;
+  --ink-soft: #4A4A4A;
+  --ink-faint: #8A8580;
+  --rule: #D8D2C7;
+  --rule-faint: #E8E3D8;
+  --accent: #C0392B;
+  --accent-soft: #FCEAE6;
+  --level-1: #B7791F;
+  --level-2: #2874A6;
+  --level-3: #6C3483;
+  --level-4: #1E8449;
+
+  --serif-display: 'Newsreader', 'Noto Serif TC', Georgia, serif;
+  --serif-body: 'Newsreader', 'Noto Serif TC', Georgia, serif;
+  --mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+
+  --col-narrow: 680px;
+  --col-wide: 1100px;
+  --gutter: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif-body);
+  font-size: 19px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Subtle paper texture */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.4;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ============ NAV ============ */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 1.25rem var(--gutter);
+  display: flex; justify-content: space-between; align-items: center;
+  background: rgba(248, 245, 240, 0.85);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+.nav.scrolled { border-bottom-color: var(--rule); }
+.nav-mark {
+  font-family: var(--mono); font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink);
+  text-decoration: none;
+}
+.nav-mark span { color: var(--accent); }
+.nav-links { display: flex; gap: 1.75rem; font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; }
+.nav-links a { color: var(--ink-soft); text-decoration: none; transition: color 0.15s; }
+.nav-links a:hover { color: var(--accent); }
+.nav-lang { color: var(--ink-faint); }
+@media (max-width: 720px) { .nav-links { display: none; } }
+
+/* ============ CONTAINERS ============ */
+.container {
+  max-width: var(--col-wide);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  position: relative; z-index: 2;
+}
+.narrow { max-width: var(--col-narrow); }
+
+/* ============ HERO ============ */
+.hero {
+  min-height: 100vh; padding: 8rem 0 5rem;
+  display: flex; align-items: center; position: relative;
+}
+.hero-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 5rem; align-items: center; }
+@media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; gap: 3rem; } }
+
+.hero-meta {
+  font-family: var(--mono); font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent);
+  margin-bottom: 1.75rem; display: flex; align-items: center; gap: 0.75rem;
+}
+.hero-meta::before { content: ''; display: block; width: 28px; height: 2px; background: var(--accent); }
+
+.hero-title {
+  font-family: var(--serif-display); font-weight: 400;
+  font-size: clamp(3.2rem, 8vw, 6.4rem);
+  line-height: 0.98; letter-spacing: -0.03em; color: var(--ink);
+  margin-bottom: 1.25rem;
+  font-variation-settings: "opsz" 72;
+}
+.hero-title em { font-style: italic; font-weight: 500; color: var(--accent); font-variation-settings: "opsz" 72; }
+
+.hero-subtitle {
+  font-family: var(--serif-body); font-size: clamp(1.15rem, 2vw, 1.4rem);
+  font-style: italic; color: var(--ink-soft); margin-bottom: 3rem;
+}
+
+.hero-thesis {
+  border-left: 2px solid var(--accent); padding-left: 1.5rem;
+  font-size: 1.05rem; line-height: 1.65; color: var(--ink);
+  max-width: 32rem; margin-bottom: 2.5rem;
+}
+.hero-thesis strong { font-weight: 600; }
+
+.hero-actions {
+  display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;
+  font-family: var(--mono); font-size: 0.78rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+}
+.btn {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  padding: 0.95rem 1.6rem; text-decoration: none; font-weight: 600;
+  border: 1.5px solid var(--ink); background: var(--ink); color: var(--paper);
+  transition: all 0.18s ease;
+}
+.btn:hover { background: var(--accent); border-color: var(--accent); }
+.btn-ghost { background: transparent; color: var(--ink); }
+.btn-ghost:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.btn-arrow { display: inline-block; transition: transform 0.2s; }
+.btn:hover .btn-arrow { transform: translateX(3px); }
+
+/* ============ HERO LOGO ============ */
+.hero-logo { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.hex-logo { width: 100%; max-width: 380px; aspect-ratio: 1; position: relative; }
+.hex-logo svg { width: 100%; height: 100%; display: block; }
+.hex-caption {
+  margin-top: 1.5rem; text-align: center;
+  font-family: var(--mono); font-size: 0.7rem;
+  letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faint);
+  line-height: 1.6;
+}
+
+/* ============ SECTION ============ */
+.section { padding: 7rem 0; position: relative; }
+@media (max-width: 720px) { .section { padding: 4.5rem 0; } }
+.section-eyebrow {
+  font-family: var(--mono); font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent);
+  margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.85rem;
+}
+.section-eyebrow::before { content: '§'; color: var(--ink-faint); font-family: var(--serif-body); font-size: 1.2rem; }
+.section-title {
+  font-family: var(--serif-display); font-weight: 500;
+  font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.05;
+  letter-spacing: -0.02em; color: var(--ink); margin-bottom: 1.5rem;
+  font-variation-settings: "opsz" 72;
+}
+.section-title em { font-style: italic; font-weight: 500; color: var(--accent); font-variation-settings: "opsz" 72; }
+.section-lead {
+  font-size: 1.2rem; line-height: 1.65; color: var(--ink-soft);
+  font-style: italic; max-width: 36rem; margin-bottom: 4.5rem;
+}
+
+/* ============ THESIS ============ */
+.thesis {
+  padding: 8rem 0; background: var(--paper-deep);
+  border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+  position: relative;
+}
+.thesis-quote {
+  font-family: var(--serif-body); font-weight: 500;
+  font-size: clamp(1.6rem, 3.6vw, 2.5rem); line-height: 1.4; color: var(--ink);
+  letter-spacing: -0.005em;
+  font-variation-settings: "opsz" 72;
+  margin-bottom: 2.5rem;
+}
+.thesis-quote em { font-style: italic; font-weight: 500; color: var(--accent); }
+.thesis-attr { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); }
+.thesis-mark {
+  font-family: var(--serif-display); font-size: 8rem; line-height: 1;
+  color: var(--accent); opacity: 0.18;
+  position: absolute; top: 4rem; left: var(--gutter);
+  pointer-events: none; font-weight: 600;
+}
+
+/* ============ STEPS (4-Step path) ============ */
+.steps-section { background: var(--paper); border-top: 1px solid var(--rule); }
+.steps-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1rem; margin-top: 2rem;
+}
+@media (max-width: 1000px) { .steps-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px)  { .steps-grid { grid-template-columns: 1fr; } }
+.step {
+  padding: 2rem 1.5rem; background: var(--paper-deep);
+  border: 1px solid var(--rule); position: relative;
+}
+.step::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--lc);
+}
+.step[data-step="1"] { --lc: var(--level-1); }
+.step[data-step="2"] { --lc: var(--level-2); }
+.step[data-step="3"] { --lc: var(--level-3); }
+.step[data-step="4"] { --lc: var(--level-4); }
+.step-num {
+  font-family: var(--mono); font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.18em; color: var(--lc); margin-bottom: 0.75rem;
+}
+.step-title {
+  font-family: var(--serif-display); font-weight: 500;
+  font-size: 1.4rem; line-height: 1.15; margin-bottom: 0.75rem;
+  font-variation-settings: "opsz" 72;
+}
+.step-tw {
+  font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em;
+  color: var(--ink-faint); margin-bottom: 1rem; text-transform: uppercase;
+}
+.step-desc {
+  font-family: var(--serif-body); font-size: 0.95rem;
+  line-height: 1.6; color: var(--ink-soft);
+}
+
+/* ============ LEVELS ============ */
+.levels-section { background: var(--ink); color: var(--paper); padding: 7rem 0; }
+.levels-section .section-eyebrow { color: var(--accent-soft); }
+.levels-section .section-eyebrow::before { color: var(--ink-faint); }
+.levels-section .section-title { color: var(--paper); }
+.levels-section .section-lead { color: var(--rule); }
+
+.levels-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 2rem; }
+@media (max-width: 1000px) { .levels-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px)  { .levels-grid { grid-template-columns: 1fr; } }
+
+.level {
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12);
+  padding: 2rem 1.6rem; position: relative; transition: all 0.2s ease;
+}
+.level:hover { background: rgba(255,255,255,0.08); transform: translateY(-3px); }
+.level::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--lc); }
+.level[data-level="1"] { --lc: var(--level-1); }
+.level[data-level="2"] { --lc: var(--level-2); }
+.level[data-level="3"] { --lc: var(--level-3); }
+.level[data-level="4"] { --lc: var(--level-4); }
+.level-num { font-family: var(--mono); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.18em; color: var(--lc); margin-bottom: 0.75rem; }
+.level-title { font-family: var(--serif-display); font-weight: 500; font-size: 1.5rem; line-height: 1.15; margin-bottom: 1rem; color: var(--paper); font-variation-settings: "opsz" 72; }
+.level-mech { font-family: var(--mono); font-size: 0.78rem; color: var(--rule); margin-bottom: 1.5rem; }
+.level-detail { font-family: var(--serif-body); font-size: 0.92rem; line-height: 1.55; color: var(--rule); margin-bottom: 1.5rem; }
+.level-stats { display: flex; flex-direction: column; gap: 0.4rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.12); }
+.level-stat { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.05em; }
+.level-stat-label { color: var(--ink-faint); text-transform: uppercase; }
+.level-stat-value { color: var(--paper); font-weight: 500; }
+
+.one-line-summary {
+  margin: 4rem auto 0; padding: 3.5rem 2rem; max-width: 900px;
+  text-align: center; border-top: 1px solid rgba(255,255,255,0.12);
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+}
+.one-line-eyebrow { font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.3em; color: var(--ink-faint); text-transform: uppercase; margin-bottom: 1.5rem; }
+.one-line-text {
+  font-family: var(--serif-display); font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+  font-weight: 400; letter-spacing: -0.01em; line-height: 1.4; color: var(--paper);
+}
+.one-line-text em { color: var(--accent); font-style: italic; }
+.one-line-tag { margin-top: 1.5rem; font-family: var(--serif-body); font-size: 1.05rem; font-style: italic; color: var(--rule); }
+
+/* ============ MANIFESTO PRINCIPLES ============ */
+.principles { display: flex; flex-direction: column; }
+.principle {
+  display: grid; grid-template-columns: auto 1fr;
+  gap: clamp(1.5rem, 4vw, 4rem);
+  padding: 3rem 0; border-top: 1px solid var(--rule); align-items: baseline;
+}
+.principle:last-child { border-bottom: 1px solid var(--rule); }
+.principle-num {
+  font-family: var(--serif-display); font-weight: 400;
+  font-size: clamp(2.5rem, 5vw, 4.5rem); line-height: 1;
+  color: var(--ink-faint); letter-spacing: -0.04em; min-width: 2.5em;
+  font-variation-settings: "opsz" 72;
+  font-feature-settings: 'lnum';
+}
+.principle-body h3 {
+  font-family: var(--serif-display); font-weight: 500;
+  font-size: clamp(1.4rem, 2.6vw, 1.85rem); line-height: 1.2;
+  letter-spacing: -0.01em; margin-bottom: 0.5rem; color: var(--ink);
+  font-variation-settings: "opsz" 72;
+}
+.principle-body .tw {
+  font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; display: block;
+}
+.principle-body p { font-size: 1.05rem; line-height: 1.7; color: var(--ink-soft); max-width: 38rem; }
+@media (max-width: 720px) {
+  .principle { grid-template-columns: 1fr; gap: 0.75rem; padding: 2.25rem 0; }
+  .principle-num { font-size: 2rem; }
+}
+
+/* ============ MODES ============ */
+.modes-section { padding: 6rem 0; background: var(--paper); border-top: 1px solid var(--rule); }
+.modes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; margin: 4rem 0 3rem; }
+@media (max-width: 768px) { .modes-grid { grid-template-columns: 1fr; gap: 1.75rem; } }
+.mode { padding: 2rem 1.75rem; background: var(--paper-deep); border: 1px solid var(--rule); position: relative; }
+.mode-a { border-top: 4px solid var(--level-1); }
+.mode-b { border-top: 4px solid var(--level-3); }
+.mode-tag { font-family: var(--mono); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.3em; margin-bottom: 0.5rem; }
+.mode-a .mode-tag { color: var(--level-1); }
+.mode-b .mode-tag { color: var(--level-3); }
+.mode-title { font-family: var(--serif-display); font-size: 1.75rem; font-weight: 500; margin: 0 0 0.25rem; color: var(--ink); }
+.mode-tw { font-style: italic; color: var(--ink-faint); margin: 0 0 1.5rem; font-size: 0.95rem; }
+.mode-summary { color: var(--ink); line-height: 1.65; margin: 0 0 1.5rem; }
+.mode-features { list-style: none; padding: 0; margin: 0 0 1.5rem; border-top: 1px solid var(--rule-faint); padding-top: 1rem; }
+.mode-features li {
+  font-size: 0.95rem; color: var(--ink-soft);
+  padding: 0.35rem 0 0.35rem 1.25rem; position: relative;
+}
+.mode-features li::before { content: '▸'; position: absolute; left: 0; color: var(--ink-faint); }
+.mode-fit, .mode-cost { margin: 0.75rem 0 0; font-size: 0.9rem; color: var(--ink-soft); line-height: 1.5; }
+.mode-label { display: inline-block; font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; margin-right: 0.5rem; color: var(--ink-faint); }
+
+.modes-recommendation { margin: 3rem 0; padding: 2rem; background: var(--accent-soft); border-left: 4px solid var(--accent); }
+.modes-rec-eyebrow { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.25em; color: var(--accent); text-transform: uppercase; margin-bottom: 0.5rem; }
+.modes-recommendation h3 { font-family: var(--serif-display); font-size: 1.4rem; font-weight: 500; margin: 0 0 1rem; color: var(--ink); }
+.modes-recommendation p { color: var(--ink); line-height: 1.7; margin: 0; }
+
+.modes-tradeoff-wrap { margin: 4rem 0 2rem; }
+.modes-tradeoff-title { font-family: var(--serif-display); font-size: 1.4rem; font-weight: 500; margin-bottom: 1.5rem; color: var(--ink); }
+.modes-tradeoff { width: 100%; border-collapse: collapse; }
+.modes-tradeoff th { font-family: var(--mono); font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; text-align: left; padding: 1rem 0.75rem; border-bottom: 2px solid var(--ink); color: var(--ink); }
+.modes-tradeoff td { padding: 0.85rem 0.75rem; border-bottom: 1px solid var(--rule-faint); color: var(--ink); font-size: 0.95rem; }
+.modes-tradeoff td.ok { color: #1E8449; font-weight: 500; }
+.modes-tradeoff td.bad { color: var(--accent); }
+.modes-tradeoff td.meh { color: var(--level-1); }
+@media (max-width: 600px) { .modes-tradeoff { font-size: 0.85rem; } .modes-tradeoff th, .modes-tradeoff td { padding: 0.6rem 0.4rem; } }
+
+.modes-conclusion { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--rule); font-style: italic; font-size: 1.05rem; line-height: 1.7; color: var(--ink-soft); }
+
+/* ============ DISTINCTION ============ */
+.distinction-table { margin-top: 3rem; border-top: 2px solid var(--ink); }
+.distinction-row { display: grid; grid-template-columns: 1fr 1.6fr 1.6fr; border-bottom: 1px solid var(--rule); padding: 1.5rem 0; gap: 1.5rem; }
+.distinction-row.header { border-bottom: 1px solid var(--ink); font-family: var(--mono); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); padding: 1rem 0; }
+.distinction-row.header > div:nth-child(2) { color: var(--ink-faint); }
+.distinction-row.header > div:nth-child(3) { color: var(--accent); }
+.distinction-vs { font-family: var(--serif-display); font-style: italic; font-size: 1.15rem; font-weight: 500; color: var(--ink); font-variation-settings: "opsz" 72; }
+.distinction-them { color: var(--ink-faint); font-size: 0.95rem; line-height: 1.55; }
+.distinction-r2k { color: var(--ink); font-size: 0.95rem; line-height: 1.55; }
+@media (max-width: 720px) {
+  .distinction-row { grid-template-columns: 1fr; gap: 0.5rem; }
+  .distinction-row.header { display: none; }
+  .distinction-them::before { content: '其他: '; color: var(--ink-faint); font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; display: block; margin-top: 0.5rem; }
+  .distinction-r2k::before { content: 'R2K: '; color: var(--accent); font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; display: block; margin-top: 0.5rem; }
+}
+
+/* ============ JOIN ============ */
+.join-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.5rem; margin-top: 3rem; }
+@media (max-width: 1000px) { .join-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 500px)  { .join-grid { grid-template-columns: 1fr; } }
+.join-card {
+  border: 1.5px solid var(--ink); padding: 2rem 1.5rem;
+  background: transparent; text-decoration: none; color: var(--ink);
+  transition: all 0.18s ease; display: flex; flex-direction: column; gap: 0.75rem;
+}
+.join-card:hover { background: var(--ink); color: var(--paper); transform: translateY(-2px); }
+.join-num { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.18em; font-weight: 700; }
+.join-card:hover .join-num { color: var(--accent-soft); }
+.join-title { font-family: var(--serif-display); font-weight: 500; font-size: 1.5rem; line-height: 1.1; font-variation-settings: "opsz" 72; }
+.join-card:hover .join-title em { color: var(--accent-soft); }
+.join-title em { font-style: italic; color: var(--accent); font-variation-settings: "opsz" 72; }
+.join-desc { font-size: 0.92rem; line-height: 1.55; color: var(--ink-soft); }
+.join-card:hover .join-desc { color: var(--rule); }
+
+/* ============ FOOTER ============ */
+.footer { padding: 5rem 0 3rem; border-top: 1px solid var(--rule); background: var(--paper-deep); }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+@media (max-width: 720px) { .footer-grid { grid-template-columns: 1fr; gap: 2rem; } }
+.footer-mark { font-family: var(--serif-display); font-size: 1.5rem; font-weight: 500; margin-bottom: 0.5rem; font-variation-settings: "opsz" 72; }
+.footer-mark em { font-style: italic; color: var(--accent); font-variation-settings: "opsz" 72; }
+.footer-tag { font-size: 0.95rem; font-style: italic; color: var(--ink-soft); line-height: 1.6; }
+.footer-col h4 { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 1rem; font-weight: 700; }
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; font-family: var(--mono); font-size: 0.8rem; color: var(--ink-soft); }
+.footer-col a { color: var(--ink-soft); text-decoration: none; transition: color 0.15s; }
+.footer-col a:hover { color: var(--accent); }
+.footer-bottom {
+  padding-top: 2rem; border-top: 1px solid var(--rule);
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+  font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em;
+  color: var(--ink-faint); text-transform: uppercase;
+}
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.hero > * { animation: fadeIn 0.9s ease both; }
+.hero-meta { animation-delay: 0.05s; }
+.hero-title { animation-delay: 0.15s; }
+.hero-subtitle { animation-delay: 0.3s; }
+.hero-thesis { animation-delay: 0.45s; }
+.hero-actions { animation-delay: 0.6s; }
+.hero-logo { animation-delay: 0.5s; }
+
+.amp { font-family: var(--serif-display); font-style: italic; font-weight: 400; color: var(--accent); }
+</style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav class="nav" id="nav">
+  <a href="#top" class="nav-mark">R<span>2</span>K · MANIFESTO</a>
+  <div class="nav-links">
+    <a href="#thesis">Thesis</a>
+    <a href="#steps">Steps</a>
+    <a href="#manifesto">Manifesto</a>
+    <a href="#levels">Levels</a>
+    <a href="#modes">Modes</a>
+    <a href="#join">Join</a>
+    <a href="/en/" class="nav-lang">EN</a>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="top">
+  <div class="container hero-grid">
+    <div>
+      <div class="hero-meta">Release-as-Knowledge · Manifesto v1</div>
+
+      <h1 class="hero-title">
+        Release<br>
+        as <em>Knowledge</em>
+      </h1>
+
+      <p class="hero-subtitle">軟體發布即知識傳遞 · R2K v1</p>
+
+      <p class="hero-thesis">
+        過去十年我們把<strong>程式碼</strong>管道化 ── git, CI/CD, registry, helm。
+        下個十年要把<strong>程式碼以外的開發團隊知識</strong>管道化。
+      </p>
+
+      <div class="hero-actions">
+        <a href="#manifesto" class="btn">Read the Manifesto <span class="btn-arrow">↓</span></a>
+        <a href="#join" class="btn btn-ghost">Adopt R2K <span class="btn-arrow">→</span></a>
+      </div>
+    </div>
+
+    <div class="hero-logo">
+      <div class="hex-logo">
+        <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="200,30 348,115 348,285 200,370 52,285 52,115" fill="#1A1A1A" stroke="none"/>
+          <polygon points="200,55 326,128 326,272 200,345 74,272 74,128" fill="none" stroke="#C0392B" stroke-width="1" opacity="0.5"/>
+          <text x="200" y="225" text-anchor="middle" font-family="Fraunces, serif" font-size="120" font-weight="500" fill="#F8F5F0" font-style="italic">R2K</text>
+          <circle cx="200" cy="265" r="3" fill="#C0392B"/>
+        </svg>
+      </div>
+      <div class="hex-caption">Image as<br>Knowledge Vehicle</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== THESIS ===== -->
+<section class="thesis" id="thesis">
+  <div class="thesis-mark">"</div>
+  <div class="container narrow">
+    <p class="thesis-quote">
+      開發團隊腦袋裡的知識,跟著新版本被釋出 ──<br>
+      但這份知識<em>並不會</em>跟著 image 一起發布出去。
+    </p>
+    <p class="thesis-attr">The R2K Thesis</p>
+  </div>
+</section>
+
+<!-- ===== STEPS · 4-Step adoption path ===== -->
+<section class="section steps-section" id="steps">
+  <div class="container">
+
+    <div class="section-eyebrow">Adoption Path</div>
+    <h2 class="section-title">四階段 <em>推薦進程</em></h2>
+    <p class="section-lead">
+      從「丟一個 binary」升級成「結構化、可機器索引的知識傳遞」── R2K v1 拆成四個可漸進採用的步驟,每一步都有對應工具與驗證。
+    </p>
+
+    <div class="steps-grid">
+      <article class="step" data-step="1">
+        <div class="step-num">STEP 1</div>
+        <h3 class="step-title">LABEL</h3>
+        <div class="step-tw">Identify · 5 行 Dockerfile</div>
+        <p class="step-desc">在 image 上掛 OCI 標準 label（<code>org.opencontainers.image.*</code>）+ R2K 專屬 label（<code>com.releaseasknowledge.*</code>）宣告身份。</p>
+      </article>
+
+      <article class="step" data-step="2">
+        <div class="step-num">STEP 2</div>
+        <h3 class="step-title">Snapshot</h3>
+        <div class="step-tw">Trust · 自動收集</div>
+        <p class="step-desc">build 時把 OpenAPI / DB schema / config / SBOM 等事實 dump 進 <code>/r2k/</code>,並用 <code>/r2k/index.yaml</code> 當入口清單。</p>
+      </article>
+
+      <article class="step" data-step="3">
+        <div class="step-num">STEP 3</div>
+        <h3 class="step-title">Diff</h3>
+        <div class="step-tw">Understand · plugin SPI</div>
+        <p class="step-desc">對兩個 release 的 snapshots 做跨資產 diff,輸出統一的 <code>change.yaml</code>。每種資產一個 plugin。</p>
+      </article>
+
+      <article class="step" data-step="4">
+        <div class="step-num">STEP 4</div>
+        <h3 class="step-title">Insight</h3>
+        <div class="step-tw">Share · 跨資產整合</div>
+        <p class="step-desc">把多個 diff 跨資產關聯成風險洞察。可接 LLM、規則引擎、policy-as-code,並輸出 R2K badge。</p>
+      </article>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== MANIFESTO ===== -->
+<section class="section" id="manifesto">
+  <div class="container narrow">
+
+    <div class="section-eyebrow">The Manifesto</div>
+    <h2 class="section-title">Eight <em>Principles</em></h2>
+    <p class="section-lead">
+      R2K 不是產品、不是工具、不是 vendor。
+      它是一份 thesis,由 8 條原則組成 —— 描述軟體發布<em class="amp">應該</em>怎麼運作,卻很少被這樣做。
+    </p>
+
+    <div class="principles">
+
+      <article class="principle" style="border-left: 3px solid var(--accent); padding-left: 1.25rem;">
+        <div class="principle-num" style="color: var(--accent);">01</div>
+        <div class="principle-body">
+          <h3>Artifact carries facts, not intelligence</h3>
+          <span class="tw">Artifact 存事實,不存解讀</span>
+          <p>OCI image 該存 L1（LABEL）+ L2（snapshots：API spec、DB schema、config）,這些是<em class="amp">事實</em>。L3（Change Manifest）是<em class="amp">解讀</em>,從事實計算出來,不必烘焙進 image。</p>
+          <p style="margin-top: 0.75rem; font-style: italic; color: var(--ink-soft);">
+            類比 git：commit 存 snapshot,diff 是計算的。<br>
+            類比 SBOM：存元件清單,vulnerability scan 是計算的。<br>
+            <strong>R2K 對 OCI image 做 git 對 source code 做的事。</strong>
+          </p>
+        </div>
+      </article>
+
+      <article class="principle">
+        <div class="principle-num">02</div>
+        <div class="principle-body">
+          <h3>Knowledge ships with the artifact</h3>
+          <span class="tw">知識跟著 artifact 一起發布</span>
+          <p>API spec、config schema、migration plan、SBOM 應該跟 image 同步發布、同步版本化、同步流通。不是事後寫 release notes,是 build 當下自動採集。</p>
+        </div>
+      </article>
+
+      <article class="principle">
+        <div class="principle-num">03</div>
+        <div class="principle-body">
+          <h3>Implicit must become explicit</h3>
+          <span class="tw">隱性必須轉為顯性</span>
+          <p>「這次哪個 API breaking」「哪個 migration 危險」「哪個 config 必填」這類知識,不該停留在工程師腦袋或 PR description。必須在 build 時被結構化萃取。</p>
+        </div>
+      </article>
+
+      <article class="principle">
+        <div class="principle-num">04</div>
+        <div class="principle-body">
+          <h3>Standards over invention</h3>
+          <span class="tw">標準優於發明</span>
+          <p>能用 OCI Referrers 就用、能用 CycloneDX 就用、能用 OpenAPI 就用。R2K 是把業界既有工具的輸出整合,<em class="amp">不是</em>另起爐灶。</p>
+        </div>
+      </article>
+
+      <article class="principle">
+        <div class="principle-num">05</div>
+        <div class="principle-body">
+          <h3>Designed for non-developers</h3>
+          <span class="tw">為非開發者設計</span>
+          <p>R2K 的服務對象不是開發者(他們已有 git、PR、Slack),而是支援團隊、業務、客戶 DevOps、稽核者、合規團隊。任何呈現都要假設讀者<em class="amp">不會</em>讀程式碼或翻 git log。</p>
+        </div>
+      </article>
+
+      <article class="principle">
+        <div class="principle-num">06</div>
+        <div class="principle-body">
+          <h3>Layered by query frequency</h3>
+          <span class="tw">依查詢頻率分層</span>
+          <p>高頻輕查（版本、case_type）用 LABEL 索引（~50ms）。低頻重查（SBOM、test report）用 metadata layer（~300ms）。完整深度查詢用 Change Manifest。</p>
+        </div>
+      </article>
+
+      <article class="principle">
+        <div class="principle-num">07</div>
+        <div class="principle-body">
+          <h3>Compatible with existing pipelines</h3>
+          <span class="tw">相容於現有 pipeline</span>
+          <p>R2K 不要求重寫 CI/CD。從 Level 1 的 5 行 Dockerfile 開始,每一級都有獨立價值,可以漸進採用。</p>
+        </div>
+      </article>
+
+      <article class="principle">
+        <div class="principle-num">08</div>
+        <div class="principle-body">
+          <h3>Manifests are the lingua franca</h3>
+          <span class="tw">Manifest 是共同語言</span>
+          <p>Change Manifest、License Manifest、Network Contract — 結構化 yaml/json 是組織內外協作的共同語言。<em class="amp">比</em> release notes 精確,<em class="amp">比</em> wiki 即時,<em class="amp">比</em> Slack 對話可追溯。</p>
+        </div>
+      </article>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== LEVELS ===== -->
+<section class="levels-section" id="levels">
+  <div class="container">
+
+    <div class="section-eyebrow" style="color: #C0392B;">Compliance Tiers</div>
+    <h2 class="section-title">Four <em>Levels</em></h2>
+    <p class="section-lead">
+      像 SLSA 一樣,R2K 漸進採用。每一級都可以單獨宣告達成 ──「我們是 R2K Level 2」就跟「我們是 SLSA Level 3」一樣可以單獨成立。
+    </p>
+
+    <div class="levels-grid">
+
+      <article class="level" data-level="1">
+        <div class="level-num">L1 · IDENTIFY</div>
+        <h3 class="level-title">身份層 · <em>Identify</em></h3>
+        <p class="level-mech">Docker LABEL · build-arg</p>
+        <p class="level-detail">
+          所有 production image 帶 OCI 標準 LABEL（<code>org.opencontainers.image.*</code>）+ R2K namespace LABEL（<code>com.releaseasknowledge.*</code>）,任何 scanner 秒掃。
+        </p>
+        <div class="level-stats">
+          <div class="level-stat"><span class="level-stat-label">Cost</span><span class="level-stat-value">1–2 週</span></div>
+          <div class="level-stat"><span class="level-stat-label">Win</span><span class="level-stat-value">90% 查詢秒回</span></div>
+        </div>
+      </article>
+
+      <article class="level" data-level="2">
+        <div class="level-num">L2 · TRUST</div>
+        <h3 class="level-title">資產層 · <em>Trust</em></h3>
+        <p class="level-mech">/r2k/* snapshots · index.yaml</p>
+        <p class="level-detail">
+          + OpenAPI、DB schema、config、SBOM、runtime manifest 寫進 <code>/r2k/</code>,並由 <code>index.yaml</code> 列表 + sha256 防竄改。
+        </p>
+        <div class="level-stats">
+          <div class="level-stat"><span class="level-stat-label">Cost</span><span class="level-stat-value">2–3 週</span></div>
+          <div class="level-stat"><span class="level-stat-label">Win</span><span class="level-stat-value">Audit 即時</span></div>
+        </div>
+      </article>
+
+      <article class="level" data-level="3">
+        <div class="level-num">L3 · UNDERSTAND</div>
+        <h3 class="level-title">變更層 · <em>Understand</em></h3>
+        <p class="level-mech">change.yaml · diff plugin SPI</p>
+        <p class="level-detail">
+          + 跨 API/DB/Config/SBOM 的統一 <code>change.yaml</code>。<strong>L3 是 derived intelligence</strong>,從 L1+L2 計算而來 —— Mode A 預先算 / Mode B 即時算（見下）。
+        </p>
+        <div class="level-stats">
+          <div class="level-stat"><span class="level-stat-label">Cost</span><span class="level-stat-value">6–8 週</span></div>
+          <div class="level-stat"><span class="level-stat-label">Win</span><span class="level-stat-value">30 min → 5 sec</span></div>
+        </div>
+      </article>
+
+      <article class="level" data-level="4">
+        <div class="level-num">L4 · SHARE</div>
+        <h3 class="level-title">分享層 · <em>Share</em></h3>
+        <p class="level-mech">OCI Referrers · badge · 跨組織</p>
+        <p class="level-detail">
+          + 完全 OCI 1.1 化,R2K artifact 跨組織傳遞,客戶端可離線讀取,並輸出 R2K badge（Level + Mode）。
+        </p>
+        <div class="level-stats">
+          <div class="level-stat"><span class="level-stat-label">Cost</span><span class="level-stat-value">4 週</span></div>
+          <div class="level-stat"><span class="level-stat-label">Win</span><span class="level-stat-value">客戶/業務全員</span></div>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="one-line-summary">
+      <div class="one-line-eyebrow">In One Line</div>
+      <p class="one-line-text">
+        L1 = <em>Identify</em> · L2 = <em>Trust</em> · L3 = <em>Understand</em> · L4 = <em>Share</em>
+      </p>
+      <p class="one-line-tag">
+        把軟體發布從「shipping software」轉變成「shipping interpretable change intelligence」。
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== MODES ===== -->
+<section class="modes-section" id="modes">
+  <div class="container narrow">
+
+    <div class="section-eyebrow">L3 AB Plan</div>
+    <h2 class="section-title">L3 計算的 <em>兩種模式</em></h2>
+    <p class="section-lead">
+      L3 是 derived intelligence ── 但<em class="amp">在哪一刻</em> derive,有兩個合法選項。R2K v1 設計 Mode A / Mode B 雙模式,讓 R2K 同時服務 air-gap ISV 跟 SaaS vendor。
+    </p>
+
+    <div class="modes-grid">
+      <article class="mode mode-a">
+        <div class="mode-tag">MODE A</div>
+        <h3 class="mode-title">預先計算</h3>
+        <p class="mode-tw">Pre-computed</p>
+        <p class="mode-summary">CI 階段就把 Change Manifest 算好 + attach 到 image。客戶端不需要 Diff Engine 服務。</p>
+        <ul class="mode-features">
+          <li>Manifest 跟 image 一起 ship</li>
+          <li>CI 預設 from = previous version</li>
+          <li>客戶端讀 stored manifest</li>
+        </ul>
+        <p class="mode-fit"><span class="mode-label">適用</span> air-gap on-prem ISV、客戶 DevOps 不能連回 vendor</p>
+        <p class="mode-cost"><span class="mode-label">代價</span> from→to 預設綁死、規則升級需 rebuild</p>
+      </article>
+
+      <article class="mode mode-b">
+        <div class="mode-tag">MODE B</div>
+        <h3 class="mode-title">即時計算</h3>
+        <p class="mode-tw">On-demand</p>
+        <p class="mode-summary">CI 只 attach snapshots（L1+L2）,Diff Engine 在查詢時即時計算。任何 from→to 組合可查。</p>
+        <ul class="mode-features">
+          <li>Manifest 不在 image 內(可 cache)</li>
+          <li>規則升級時舊 image 自動受惠</li>
+          <li>需 host Diff Engine 服務</li>
+        </ul>
+        <p class="mode-fit"><span class="mode-label">適用</span> SaaS、connected enterprise、開源工具</p>
+        <p class="mode-cost"><span class="mode-label">代價</span> 首查稍慢(可 cache)、需 host Diff Engine</p>
+      </article>
+    </div>
+
+    <div class="modes-recommendation">
+      <div class="modes-rec-eyebrow">推薦做法</div>
+      <h3>雙模式並存</h3>
+      <p>
+        重大 release 同時 ship:主 image 內帶 Mode A 預設組合 manifest（air-gap 客戶可直接用）,L2 snapshots 完整保留（連線客戶可走 Mode B 算任意組合）。<strong>底層機制完全相同</strong>,差別只在 manifest 在 lifecycle 哪一段算。
+      </p>
+    </div>
+
+    <div class="modes-tradeoff-wrap">
+      <h3 class="modes-tradeoff-title">取捨對照</h3>
+      <table class="modes-tradeoff">
+        <thead>
+          <tr>
+            <th>維度</th><th>Mode A</th><th>Mode B</th><th>雙模式</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Air-gap 友好</td><td class="ok">✓ 完美</td><td class="bad">✗ 需服務</td><td class="ok">✓</td></tr>
+          <tr><td>任意 from→to 查詢</td><td class="bad">✗ 預設綁死</td><td class="ok">✓ 完整</td><td class="ok">✓</td></tr>
+          <tr><td>Diff 規則升級自動受惠</td><td class="bad">✗ 需 rebuild</td><td class="ok">✓ 自動</td><td class="meh">△ 部分</td></tr>
+          <tr><td>CI 整合複雜度</td><td class="ok">✓ 簡單</td><td class="ok">✓ 簡單</td><td class="meh">△ 中等</td></tr>
+          <tr><td>客戶端複雜度</td><td class="ok">✓ 簡單</td><td class="meh">△ 需連線</td><td class="meh">△ 看 path</td></tr>
+          <tr><td>適用 vendor 類型</td><td>ISV / on-prem</td><td>SaaS</td><td>中型混合</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="modes-conclusion">
+      R2K <strong>作為 framework 不規定哪一個</strong> ── 但<strong>第 1 原則（facts vs intelligence）讓兩種模式都成為合法的實踐方式</strong>。選擇取決於你的客戶端是否能連到你的服務。
+    </p>
+
+  </div>
+</section>
+
+<!-- ===== DISTINCTION ===== -->
+<section class="section">
+  <div class="container narrow">
+
+    <div class="section-eyebrow">Distinction</div>
+    <h2 class="section-title">What R2K <em>Isn't</em></h2>
+    <p class="section-lead">清楚的邊界讓 thesis 變得有用。R2K 跟既有概念有重疊,但解的是不同的問題。</p>
+
+    <div class="distinction-table">
+      <div class="distinction-row header"><div>vs.</div><div>那個概念解決...</div><div>R2K 解決...</div></div>
+
+      <div class="distinction-row">
+        <div class="distinction-vs">SBOM</div>
+        <div class="distinction-them">軟體成分清單 — 主要給 security 與 compliance team 用。</div>
+        <div class="distinction-r2k">SBOM 是 R2K 的子集合（L2 內含）。R2K 涵蓋更多面向、強調給非開發者用。</div>
+      </div>
+
+      <div class="distinction-row">
+        <div class="distinction-vs">SLSA</div>
+        <div class="distinction-them">這 image 是怎麼 build 的、是否被竄改 — supply chain security 視角。</div>
+        <div class="distinction-r2k">這 image 對使用者意味著什麼變更 — change communication 視角。</div>
+      </div>
+
+      <div class="distinction-row">
+        <div class="distinction-vs">Release Notes</div>
+        <div class="distinction-them">人工敘事的副產品,給人類讀者瀏覽用。</div>
+        <div class="distinction-r2k">自動化、結構化、機器可讀的主產物 — Release Notes 是它的衍生。</div>
+      </div>
+
+      <div class="distinction-row">
+        <div class="distinction-vs">Documentation</div>
+        <div class="distinction-them">人工撰寫,永遠跟版本對不上,需要持續維護。</div>
+        <div class="distinction-r2k">跟 image 同步發布,永遠對得上版本,build 時自動產出。</div>
+      </div>
+
+      <div class="distinction-row">
+        <div class="distinction-vs">Helm Chart</div>
+        <div class="distinction-them">部署時的 declarative spec — 告訴你「怎麼部署」。</div>
+        <div class="distinction-r2k">發布時的 descriptive manifest — 告訴你「這次發布變了什麼」。</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== JOIN ===== -->
+<section class="section" id="join" style="background: var(--paper-deep); border-top: 1px solid var(--rule);">
+  <div class="container">
+
+    <div class="section-eyebrow">Get Involved</div>
+    <h2 class="section-title">Five Ways to <em>Join</em></h2>
+    <p class="section-lead">沒有行動的 manifesto 只是裝飾。挑一條最適合你目前處境的路徑。</p>
+
+    <div class="join-grid">
+      <a href="https://github.com/enjtorian/release-as-knowledge/blob/main/SIGNATURES.md" class="join-card">
+        <div class="join-num">01</div>
+        <div class="join-title"><em>Sign</em></div>
+        <div class="join-desc">把名字加進 SIGNATURES.md,公開支持 R2K Manifesto 的方向。</div>
+      </a>
+
+      <a href="https://github.com/enjtorian/release-as-knowledge#step-1--docker-label-l1--identify" class="join-card">
+        <div class="join-num">02</div>
+        <div class="join-title"><em>Adopt</em></div>
+        <div class="join-desc">在 production image 開始實踐 R2K Level 1。1-2 週可達成。</div>
+      </a>
+
+      <a href="https://github.com/enjtorian/release-as-knowledge" class="join-card">
+        <div class="join-num">03</div>
+        <div class="join-title"><em>Share</em></div>
+        <div class="join-desc">轉發給工程主管、DevOps、支援團隊,啟動內部對話。</div>
+      </a>
+
+      <a href="https://github.com/enjtorian/release-as-knowledge/issues" class="join-card">
+        <div class="join-num">04</div>
+        <div class="join-title"><em>Extend</em></div>
+        <div class="join-desc">提案 vendor 擴充（<code>x-yourco-*</code>）或新的 diff plugin。</div>
+      </a>
+
+      <a href="https://github.com/enjtorian/release-as-knowledge/issues/new" class="join-card">
+        <div class="join-num">05</div>
+        <div class="join-title"><em>Challenge</em></div>
+        <div class="join-desc">告訴我們哪裡不對。R2K 是 thesis,不是 dogma — 用辯論讓它更精確。</div>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="container">
+
+    <div class="footer-grid">
+      <div>
+        <div class="footer-mark">R2K · <em>Release-as-Knowledge</em></div>
+        <p class="footer-tag">
+          軟體發布即知識傳遞 ── 一份 thesis、一份 manifesto、一條漸進採用的路徑。
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Spec</h4>
+        <ul>
+          <li><a href="https://enjtorian.github.io/release-as-knowledge/zh-tw/manifesto/">Manifesto v1</a></li>
+          <li><a href="https://enjtorian.github.io/release-as-knowledge/zh-tw/quickstart/">Quick Start</a></li>
+          <li><a href="https://enjtorian.github.io/release-as-knowledge/zh-tw/glossary/">Glossary</a></li>
+          <li><a href="https://enjtorian.github.io/release-as-knowledge/zh-tw/faq/">FAQ</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Inspired By</h4>
+        <ul>
+          <li>12-Factor App</li>
+          <li>SBOM (CycloneDX)</li>
+          <li>SLSA</li>
+          <li>OpenAPI</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>R2K Manifesto v1 · 2026 年 5 月</div>
+      <div>License: CC BY 4.0 — Cite freely, modify openly</div>
+    </div>
+
+  </div>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 20) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
+  });
+</script>
+
+</body>
+</html>

@@ -24,7 +24,7 @@ R2K Level 1 在 image 上掛**兩組 label**：
 | 組別 | namespace | 由誰定義 | 工具支援 |
 |---|---|---|---|
 | **OCI 標準 label** | `org.opencontainers.image.*` | [OCI Image Spec — Annotations](https://github.com/opencontainers/image-spec/blob/main/annotations.md) | GHCR / ECR / Docker Hub UI、Trivy、Cosign、Skopeo… 全部原生支援 |
-| **R2K 專屬 label** | `dev.releaseasknowledge.*` | R2K 規格 v1 | `r2k` CLI、R2K diff plugin / insight 框架 |
+| **R2K 專屬 label** | `com.releaseasknowledge.*` | R2K 規格 v1 | `r2k` CLI、R2K diff plugin / insight 框架 |
 
 > 兩組同時掛，**不引入新工具的前提下**讓 image 既符合 OCI 慣例、也宣告為 R2K compliant。OCI label 餵給「現成的 container 生態」，R2K label 餵給「R2K 工具鏈」。
 
@@ -71,19 +71,19 @@ LABEL org.opencontainers.image.authors="team@your-org.example"
 
 ### 1.2 R2K 專屬 label（再加上）
 
-`dev.releaseasknowledge.*` 這組只負責「R2K 規格自己的事」 — 這顆 image 跟著哪個 R2K 規格走、宣告達到哪一層、L3 用哪個 mode 等。
+`com.releaseasknowledge.*` 這組只負責「R2K 規格自己的事」 — 這顆 image 跟著哪個 R2K 規格走、宣告達到哪一層、L3 用哪個 mode 等。
 
 | Label key | 必填? | 說明 | 範例值 |
 |---|:-:|---|---|
-| `dev.releaseasknowledge.version` | ✅ | 這顆 image 遵循的 **R2K 規格版本** | `1.0` |
-| `dev.releaseasknowledge.level` | ✅ | 自我宣告達到的 R2K Level（`1` / `2` / `3` / `4`） | `1` |
-| `dev.releaseasknowledge.commit` | ✅ | source commit SHA（與 `org.opencontainers.image.revision` 同值，但保留給 R2K 工具直接查） | `${COMMIT_SHA}` |
-| `dev.releaseasknowledge.build-time` | ✅ | R2K manifest 的 build 時間（RFC 3339） | `${BUILD_TIME}` |
-| `dev.releaseasknowledge.repo` | ◯ | source repo URL（diff / insight 抓上下文用） | `https://github.com/your-org/your-repo` |
-| `dev.releaseasknowledge.snapshot.path` | ◯ | L2 snapshot 在 image 內的路徑（預設 `/r2k`） | `/r2k` |
-| `dev.releaseasknowledge.diff.mode` | ◯ | L3 diff 計算時機：`A` / `B` / `A+B`（見 Step 3） | `A+B` |
-| `dev.releaseasknowledge.diff.from` | ◯ | Mode A 預先計算所對照的 base image | `your-image:v1.4.0` |
-| `dev.releaseasknowledge.spec.url` | ◯ | 你採用的 R2K 規格文件 URL | `https://releaseasknowledge.dev/spec/v1` |
+| `com.releaseasknowledge.version` | ✅ | 這顆 image 遵循的 **R2K 規格版本** | `1.0` |
+| `com.releaseasknowledge.level` | ✅ | 自我宣告達到的 R2K Level（`1` / `2` / `3` / `4`） | `1` |
+| `com.releaseasknowledge.commit` | ✅ | source commit SHA（與 `org.opencontainers.image.revision` 同值，但保留給 R2K 工具直接查） | `${COMMIT_SHA}` |
+| `com.releaseasknowledge.build-time` | ✅ | R2K manifest 的 build 時間（RFC 3339） | `${BUILD_TIME}` |
+| `com.releaseasknowledge.repo` | ◯ | source repo URL（diff / insight 抓上下文用） | `https://github.com/your-org/your-repo` |
+| `com.releaseasknowledge.snapshot.path` | ◯ | L2 snapshot 在 image 內的路徑（預設 `/r2k`） | `/r2k` |
+| `com.releaseasknowledge.diff.mode` | ◯ | L3 diff 計算時機：`A` / `B` / `A+B`（見 Step 3） | `A+B` |
+| `com.releaseasknowledge.diff.from` | ◯ | Mode A 預先計算所對照的 base image | `your-image:v1.4.0` |
+| `com.releaseasknowledge.spec.url` | ◯ | 你採用的 R2K 規格文件 URL | `https://releaseasknowledge.com/spec/v1` |
 
 > ✅ **必填**＝Level 1 的最低門檻；◯＝隨 Level 提升再補。
 > `level` 隨 Step 2 / 3 進展可被覆寫成 `2` / `3`（後 LABEL 蓋前 LABEL）。
@@ -92,12 +92,12 @@ LABEL org.opencontainers.image.authors="team@your-org.example"
 
 ```dockerfile
 # === R2K Level 1 · Identity ===
-LABEL dev.releaseasknowledge.version="1.0"
-LABEL dev.releaseasknowledge.level="1"
-LABEL dev.releaseasknowledge.commit="${COMMIT_SHA}"
-LABEL dev.releaseasknowledge.build-time="${BUILD_TIME}"
-LABEL dev.releaseasknowledge.repo="https://github.com/your-org/your-repo"
-LABEL dev.releaseasknowledge.spec.url="https://releaseasknowledge.dev/spec/v1"
+LABEL com.releaseasknowledge.version="1.0"
+LABEL com.releaseasknowledge.level="1"
+LABEL com.releaseasknowledge.commit="${COMMIT_SHA}"
+LABEL com.releaseasknowledge.build-time="${BUILD_TIME}"
+LABEL com.releaseasknowledge.repo="https://github.com/your-org/your-repo"
+LABEL com.releaseasknowledge.spec.url="https://releaseasknowledge.com/spec/v1"
 ```
 
 ### 1.3 Build 與驗證
@@ -168,7 +168,7 @@ r2k validate identity your-image:tag
 
 ```yaml
 # /r2k/index.yaml
-schema: releaseasknowledge.dev/index/v1          # 這份 index 自己的 schema
+schema: releaseasknowledge.com/index/v1          # 這份 index 自己的 schema
 generated_at: "2026-05-03T08:00:00Z"
 generator: "r2k-cli@1.0.0"        # 產生 index 的工具
 
@@ -181,8 +181,8 @@ image:
     created:  "2026-05-03T07:55:00Z"
 
 r2k:
-  spec_version: "1.0"              # = dev.releaseasknowledge.version
-  level: 2                         # = dev.releaseasknowledge.level
+  spec_version: "1.0"              # = com.releaseasknowledge.version
+  level: 2                         # = com.releaseasknowledge.level
   diff_mode: null                  # L3 才會填（A / B / A+B）
 
 assets:                            # ⭐ 核心：列出所有 L2 snapshot
@@ -205,7 +205,7 @@ assets:                            # ⭐ 核心：列出所有 L2 snapshot
   - id: config
     type: config
     path: config/env.json
-    schema: releaseasknowledge.dev/config/v1
+    schema: releaseasknowledge.com/config/v1
     media_type: application/json
     sha256: "2a3b4c..."
     collector: "internal-config-dumper@1.2.0"
@@ -240,7 +240,7 @@ extensions:
 
 | 欄位 | 必填 | 說明 |
 |---|:-:|---|
-| `schema` | ✅ | 固定 `releaseasknowledge.dev/index/v1` |
+| `schema` | ✅ | 固定 `releaseasknowledge.com/index/v1` |
 | `generated_at` | ✅ | RFC 3339 時間 |
 | `image.ref` / `image.digest` | ✅ | 鎖定這份 index 屬於哪顆 image |
 | `r2k.spec_version` / `r2k.level` | ✅ | 與 OCI label 一致 |
@@ -281,23 +281,23 @@ r2k snapshot index /r2k --out /r2k/index.yaml \
 
 ### 2.4 寫進 image 並升級 label
 
-把整個 `/r2k/` 寫進 image，並把 `dev.releaseasknowledge.level` 從 `1` 蓋成 `2`、補上 snapshot 路徑與 index 入口：
+把整個 `/r2k/` 寫進 image，並把 `com.releaseasknowledge.level` 從 `1` 蓋成 `2`、補上 snapshot 路徑與 index 入口：
 
 ```dockerfile
 # === R2K Level 2 · Trust ===
 COPY --from=collector /r2k /r2k
 
 # 升級 R2K level（後 LABEL 蓋前 LABEL）
-LABEL dev.releaseasknowledge.level="2"
-LABEL dev.releaseasknowledge.snapshot.path="/r2k"
-LABEL dev.releaseasknowledge.snapshot.index="/r2k/index.yaml"
+LABEL com.releaseasknowledge.level="2"
+LABEL com.releaseasknowledge.snapshot.path="/r2k"
+LABEL com.releaseasknowledge.snapshot.index="/r2k/index.yaml"
 ```
 
 | Label key | 說明 |
 |---|---|
-| `dev.releaseasknowledge.level="2"` | 把宣告的 R2K Level 從 1 提升到 2 |
-| `dev.releaseasknowledge.snapshot.path` | L2 snapshot 在 image 內的根目錄（預設 `/r2k`，自家專案改路徑時才需要寫） |
-| `dev.releaseasknowledge.snapshot.index` | snapshot 入口清單的絕對路徑，下游 / `r2k` CLI 從這裡開始讀 |
+| `com.releaseasknowledge.level="2"` | 把宣告的 R2K Level 從 1 提升到 2 |
+| `com.releaseasknowledge.snapshot.path` | L2 snapshot 在 image 內的根目錄（預設 `/r2k`，自家專案改路徑時才需要寫） |
+| `com.releaseasknowledge.snapshot.index` | snapshot 入口清單的絕對路徑，下游 / `r2k` CLI 從這裡開始讀 |
 
 ### 2.5 驗證
 
@@ -364,18 +364,18 @@ r2k diff $PREVIOUS_IMAGE $NEW_IMAGE --out /r2k/change/default.yaml
 # === R2K Level 3 · Understand (Mode A) ===
 COPY --from=diff /r2k/change /r2k/change
 
-LABEL dev.releaseasknowledge.level="3"
-LABEL dev.releaseasknowledge.diff.mode="A"
-LABEL dev.releaseasknowledge.diff.from="your-image:v1.4.0"
-LABEL dev.releaseasknowledge.diff.path="/r2k/change/default.yaml"
+LABEL com.releaseasknowledge.level="3"
+LABEL com.releaseasknowledge.diff.mode="A"
+LABEL com.releaseasknowledge.diff.from="your-image:v1.4.0"
+LABEL com.releaseasknowledge.diff.path="/r2k/change/default.yaml"
 ```
 
 | Label key | 說明 |
 |---|---|
-| `dev.releaseasknowledge.level="3"` | 把宣告的 R2K Level 從 2 提升到 3 |
-| `dev.releaseasknowledge.diff.mode` | L3 diff 的計算時機：`A`（pre-computed）/ `B`（on-demand）/ `A+B`（雙模式） |
-| `dev.releaseasknowledge.diff.from` | Mode A 預先算好的對照 base image，幫 Mode B 工具知道「這份內建 manifest 是哪個 pair」 |
-| `dev.releaseasknowledge.diff.path` | 內建 `change.yaml` 的絕對路徑（Mode B 找不到時 fallback） |
+| `com.releaseasknowledge.level="3"` | 把宣告的 R2K Level 從 2 提升到 3 |
+| `com.releaseasknowledge.diff.mode` | L3 diff 的計算時機：`A`（pre-computed）/ `B`（on-demand）/ `A+B`（雙模式） |
+| `com.releaseasknowledge.diff.from` | Mode A 預先算好的對照 base image，幫 Mode B 工具知道「這份內建 manifest 是哪個 pair」 |
+| `com.releaseasknowledge.diff.path` | 內建 `change.yaml` 的絕對路徑（Mode B 找不到時 fallback） |
 
 > 同步把 `index.yaml` 內的 `r2k.diff_mode` 也填好，讓單一入口檔即可看出這顆 image 的 L3 狀態。
 

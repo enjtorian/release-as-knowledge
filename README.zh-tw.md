@@ -47,10 +47,10 @@ R2K 不要求你一次性導入所有東西，而是一條**漸進採用**的路
 在 image 上打 OCI label，宣告「這顆 image 是誰、由哪個 commit 建出、走了哪條 R2K 規格」。
 
 ```dockerfile
-LABEL dev.releaseasknowledge.version="1.0"
-LABEL dev.releaseasknowledge.commit="$COMMIT_SHA"
-LABEL dev.releaseasknowledge.build-time="$BUILD_TIME"
-LABEL dev.releaseasknowledge.level="1"
+LABEL com.releaseasknowledge.version="1.0"
+LABEL com.releaseasknowledge.commit="$COMMIT_SHA"
+LABEL com.releaseasknowledge.build-time="$BUILD_TIME"
+LABEL com.releaseasknowledge.level="1"
 ```
 
 只要 5 行 Dockerfile 就能達到。**任何人 `docker inspect` 就能拿到事實**，不需要新工具、不需要改 registry。

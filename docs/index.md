@@ -63,17 +63,17 @@ Each step:
 
 ### Step 1 · Docker LABEL (L1 · Identify)
 
-**What you do**: attach OCI labels to the image to declare the release's identity — using both OCI standard labels (`org.opencontainers.image.*`) and R2K-specific labels (`dev.releaseasknowledge.*`).
+**What you do**: attach OCI labels to the image to declare the release's identity — using both OCI standard labels (`org.opencontainers.image.*`) and R2K-specific labels (`com.releaseasknowledge.*`).
 
 ```dockerfile
 LABEL org.opencontainers.image.revision="${COMMIT_SHA}"
 LABEL org.opencontainers.image.created="${BUILD_TIME}"
 LABEL org.opencontainers.image.source="https://github.com/your-org/your-repo"
 
-LABEL dev.releaseasknowledge.version="1.0"
-LABEL dev.releaseasknowledge.level="1"
-LABEL dev.releaseasknowledge.commit="${COMMIT_SHA}"
-LABEL dev.releaseasknowledge.build-time="${BUILD_TIME}"
+LABEL com.releaseasknowledge.version="1.0"
+LABEL com.releaseasknowledge.level="1"
+LABEL com.releaseasknowledge.commit="${COMMIT_SHA}"
+LABEL com.releaseasknowledge.build-time="${BUILD_TIME}"
 ```
 
 **Value**: a few lines of Dockerfile, no registry change, no framework change. Anyone can `docker inspect` to read the facts.

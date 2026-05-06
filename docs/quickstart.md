@@ -24,7 +24,7 @@ R2K Level 1 attaches **two groups of labels** to the image:
 | Group | Namespace | Defined by | Tooling support |
 |---|---|---|---|
 | **OCI standard labels** | `org.opencontainers.image.*` | [OCI Image Spec — Annotations](https://github.com/opencontainers/image-spec/blob/main/annotations.md) | Native support in GHCR / ECR / Docker Hub UI, Trivy, Cosign, Skopeo… |
-| **R2K-specific labels** | `dev.releaseasknowledge.*` | R2K spec v1 | `r2k` CLI, R2K diff plugins / insight framework |
+| **R2K-specific labels** | `com.releaseasknowledge.*` | R2K spec v1 | `r2k` CLI, R2K diff plugins / insight framework |
 
 > Use both at the same time. You **do not introduce any new tooling** — OCI labels feed the existing container ecosystem, R2K labels feed R2K tools.
 
@@ -71,20 +71,20 @@ LABEL org.opencontainers.image.authors="team@your-org.example"
 
 ### 1.2 R2K-specific labels (then add these)
 
-The `dev.releaseasknowledge.*` group only covers "things specific to R2K" — which spec version this image follows, which level it self-declares, what L3 mode it uses, etc.
+The `com.releaseasknowledge.*` group only covers "things specific to R2K" — which spec version this image follows, which level it self-declares, what L3 mode it uses, etc.
 
 | Label key | Required? | Meaning | Example value |
 |---|:-:|---|---|
-| `dev.releaseasknowledge.version` | ✅ | The **R2K spec version** this image follows | `1.0` |
-| `dev.releaseasknowledge.level` | ✅ | Self-declared R2K level (`1` / `2` / `3` / `4`) | `1` |
-| `dev.releaseasknowledge.commit` | ✅ | Source commit SHA (same value as `org.opencontainers.image.revision`, kept here so R2K tools can look it up directly) | `${COMMIT_SHA}` |
-| `dev.releaseasknowledge.build-time` | ✅ | Build time of the R2K manifest (RFC 3339) | `${BUILD_TIME}` |
-| `dev.releaseasknowledge.repo` | ◯ | Source repo URL (used by diff / insight to fetch context) | `https://github.com/your-org/your-repo` |
-| `dev.releaseasknowledge.snapshot.path` | ◯ | Where the L2 snapshot lives in the image (defaults to `/r2k`) | `/r2k` |
-| `dev.releaseasknowledge.snapshot.index` | ◯ | Absolute path of the snapshot index file | `/r2k/index.yaml` |
-| `dev.releaseasknowledge.diff.mode` | ◯ | When L3 diff is computed: `A` / `B` / `A+B` (see Step 3) | `A+B` |
-| `dev.releaseasknowledge.diff.from` | ◯ | The base image that Mode A's pre-computed manifest is paired against | `your-image:v1.4.0` |
-| `dev.releaseasknowledge.spec.url` | ◯ | URL of the R2K spec document you follow | `https://releaseasknowledge.dev/spec/v1` |
+| `com.releaseasknowledge.version` | ✅ | The **R2K spec version** this image follows | `1.0` |
+| `com.releaseasknowledge.level` | ✅ | Self-declared R2K level (`1` / `2` / `3` / `4`) | `1` |
+| `com.releaseasknowledge.commit` | ✅ | Source commit SHA (same value as `org.opencontainers.image.revision`, kept here so R2K tools can look it up directly) | `${COMMIT_SHA}` |
+| `com.releaseasknowledge.build-time` | ✅ | Build time of the R2K manifest (RFC 3339) | `${BUILD_TIME}` |
+| `com.releaseasknowledge.repo` | ◯ | Source repo URL (used by diff / insight to fetch context) | `https://github.com/your-org/your-repo` |
+| `com.releaseasknowledge.snapshot.path` | ◯ | Where the L2 snapshot lives in the image (defaults to `/r2k`) | `/r2k` |
+| `com.releaseasknowledge.snapshot.index` | ◯ | Absolute path of the snapshot index file | `/r2k/index.yaml` |
+| `com.releaseasknowledge.diff.mode` | ◯ | When L3 diff is computed: `A` / `B` / `A+B` (see Step 3) | `A+B` |
+| `com.releaseasknowledge.diff.from` | ◯ | The base image that Mode A's pre-computed manifest is paired against | `your-image:v1.4.0` |
+| `com.releaseasknowledge.spec.url` | ◯ | URL of the R2K spec document you follow | `https://releaseasknowledge.com/spec/v1` |
 
 > ✅ **Required** = minimum bar for Level 1; ◯ = add as you advance.
 > `level` is meant to be overwritten as you progress to Step 2 / 3 (later `LABEL` overrides earlier ones).
@@ -93,12 +93,12 @@ Append the R2K-specific block right after the OCI labels:
 
 ```dockerfile
 # === R2K Level 1 · Identity ===
-LABEL dev.releaseasknowledge.version="1.0"
-LABEL dev.releaseasknowledge.level="1"
-LABEL dev.releaseasknowledge.commit="${COMMIT_SHA}"
-LABEL dev.releaseasknowledge.build-time="${BUILD_TIME}"
-LABEL dev.releaseasknowledge.repo="https://github.com/your-org/your-repo"
-LABEL dev.releaseasknowledge.spec.url="https://releaseasknowledge.dev/spec/v1"
+LABEL com.releaseasknowledge.version="1.0"
+LABEL com.releaseasknowledge.level="1"
+LABEL com.releaseasknowledge.commit="${COMMIT_SHA}"
+LABEL com.releaseasknowledge.build-time="${BUILD_TIME}"
+LABEL com.releaseasknowledge.repo="https://github.com/your-org/your-repo"
+LABEL com.releaseasknowledge.spec.url="https://releaseasknowledge.com/spec/v1"
 ```
 
 ### 1.3 Build & verify
@@ -169,7 +169,7 @@ Its role in R2K is analogous to OCI's `manifest.json` or CycloneDX's `bom-ref` t
 
 ```yaml
 # /r2k/index.yaml
-schema: releaseasknowledge.dev/index/v1          # schema of this index file itself
+schema: releaseasknowledge.com/index/v1          # schema of this index file itself
 generated_at: "2026-05-03T08:00:00Z"
 generator: "r2k-cli@1.0.0"        # tool that produced this index
 
@@ -182,8 +182,8 @@ image:
     created:  "2026-05-03T07:55:00Z"
 
 r2k:
-  spec_version: "1.0"              # = dev.releaseasknowledge.version
-  level: 2                         # = dev.releaseasknowledge.level
+  spec_version: "1.0"              # = com.releaseasknowledge.version
+  level: 2                         # = com.releaseasknowledge.level
   diff_mode: null                  # filled at L3 (A / B / A+B)
 
 assets:                            # ⭐ core: every L2 snapshot listed here
@@ -206,7 +206,7 @@ assets:                            # ⭐ core: every L2 snapshot listed here
   - id: config
     type: config
     path: config/env.json
-    schema: releaseasknowledge.dev/config/v1
+    schema: releaseasknowledge.com/config/v1
     media_type: application/json
     sha256: "2a3b4c..."
     collector: "internal-config-dumper@1.2.0"
@@ -241,7 +241,7 @@ extensions:
 
 | Field | Required | Meaning |
 |---|:-:|---|
-| `schema` | ✅ | Fixed value `releaseasknowledge.dev/index/v1` |
+| `schema` | ✅ | Fixed value `releaseasknowledge.com/index/v1` |
 | `generated_at` | ✅ | RFC 3339 timestamp |
 | `image.ref` / `image.digest` | ✅ | Pin this index to a specific image |
 | `r2k.spec_version` / `r2k.level` | ✅ | Must match OCI labels |
@@ -282,23 +282,23 @@ r2k snapshot index /r2k --out /r2k/index.yaml \
 
 ### 2.4 Bake into the image and bump the label
 
-Copy `/r2k/` into the image, override `dev.releaseasknowledge.level` from `1` to `2`, and add the snapshot path / index entry:
+Copy `/r2k/` into the image, override `com.releaseasknowledge.level` from `1` to `2`, and add the snapshot path / index entry:
 
 ```dockerfile
 # === R2K Level 2 · Trust ===
 COPY --from=collector /r2k /r2k
 
 # Bump R2K level (later LABEL overrides earlier)
-LABEL dev.releaseasknowledge.level="2"
-LABEL dev.releaseasknowledge.snapshot.path="/r2k"
-LABEL dev.releaseasknowledge.snapshot.index="/r2k/index.yaml"
+LABEL com.releaseasknowledge.level="2"
+LABEL com.releaseasknowledge.snapshot.path="/r2k"
+LABEL com.releaseasknowledge.snapshot.index="/r2k/index.yaml"
 ```
 
 | Label key | Meaning |
 |---|---|
-| `dev.releaseasknowledge.level="2"` | Bump declared R2K level from 1 to 2 |
-| `dev.releaseasknowledge.snapshot.path` | Root directory of L2 snapshot inside the image (defaults to `/r2k`; only override if you use a different path) |
-| `dev.releaseasknowledge.snapshot.index` | Absolute path of the snapshot index — downstream / `r2k` CLI reads this first |
+| `com.releaseasknowledge.level="2"` | Bump declared R2K level from 1 to 2 |
+| `com.releaseasknowledge.snapshot.path` | Root directory of L2 snapshot inside the image (defaults to `/r2k`; only override if you use a different path) |
+| `com.releaseasknowledge.snapshot.index` | Absolute path of the snapshot index — downstream / `r2k` CLI reads this first |
 
 ### 2.5 Verify
 
@@ -365,18 +365,18 @@ r2k diff $PREVIOUS_IMAGE $NEW_IMAGE --out /r2k/change/default.yaml
 # === R2K Level 3 · Understand (Mode A) ===
 COPY --from=diff /r2k/change /r2k/change
 
-LABEL dev.releaseasknowledge.level="3"
-LABEL dev.releaseasknowledge.diff.mode="A"
-LABEL dev.releaseasknowledge.diff.from="your-image:v1.4.0"
-LABEL dev.releaseasknowledge.diff.path="/r2k/change/default.yaml"
+LABEL com.releaseasknowledge.level="3"
+LABEL com.releaseasknowledge.diff.mode="A"
+LABEL com.releaseasknowledge.diff.from="your-image:v1.4.0"
+LABEL com.releaseasknowledge.diff.path="/r2k/change/default.yaml"
 ```
 
 | Label key | Meaning |
 |---|---|
-| `dev.releaseasknowledge.level="3"` | Bump declared R2K level from 2 to 3 |
-| `dev.releaseasknowledge.diff.mode` | When L3 diff is computed: `A` (pre-computed) / `B` (on-demand) / `A+B` (both) |
-| `dev.releaseasknowledge.diff.from` | Base image that Mode A's pre-computed manifest is paired against — lets Mode B tools know which pair this baked manifest covers |
-| `dev.releaseasknowledge.diff.path` | Absolute path of the baked `change.yaml` (Mode B fallback when no engine is reachable) |
+| `com.releaseasknowledge.level="3"` | Bump declared R2K level from 2 to 3 |
+| `com.releaseasknowledge.diff.mode` | When L3 diff is computed: `A` (pre-computed) / `B` (on-demand) / `A+B` (both) |
+| `com.releaseasknowledge.diff.from` | Base image that Mode A's pre-computed manifest is paired against — lets Mode B tools know which pair this baked manifest covers |
+| `com.releaseasknowledge.diff.path` | Absolute path of the baked `change.yaml` (Mode B fallback when no engine is reachable) |
 
 > Also fill `r2k.diff_mode` in `index.yaml`, so a single entry file reveals this image's L3 state.
 

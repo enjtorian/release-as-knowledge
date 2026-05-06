@@ -67,10 +67,10 @@ R2K 的核心動作，是把目前以「binary 釋出」為主的 release 流程
 **做什麼**：在 image 上掛 OCI label，宣告 release 的身份。
 
 ```dockerfile
-LABEL dev.releaseasknowledge.version="1.0"
-LABEL dev.releaseasknowledge.commit="$COMMIT_SHA"
-LABEL dev.releaseasknowledge.build-time="$BUILD_TIME"
-LABEL dev.releaseasknowledge.level="1"
+LABEL com.releaseasknowledge.version="1.0"
+LABEL com.releaseasknowledge.commit="$COMMIT_SHA"
+LABEL com.releaseasknowledge.build-time="$BUILD_TIME"
+LABEL com.releaseasknowledge.level="1"
 ```
 
 **價值**：5 行 Dockerfile，不換 registry、不換 framework，就能讓任何人 `docker inspect` 拿到事實。

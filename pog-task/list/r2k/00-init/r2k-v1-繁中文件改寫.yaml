@@ -163,11 +163,11 @@ history:
   - timestamp: '2026-05-03T04:30:00.000Z'
     agent: claude-opus-4-7
     action: progress
-    message: 'domain 由 r2k.dev 改為 releaseasknowledge.dev（quickstart 中英版 spec.url / index.yaml schema、glossary 中英版 index.yaml 條目）'
+    message: 'domain 由 r2k.dev 改為 releaseasknowledge.com（quickstart 中英版 spec.url / index.yaml schema、glossary 中英版 index.yaml 條目）'
   - timestamp: '2026-05-03T04:45:00.000Z'
     agent: claude-opus-4-7
     action: progress
-    message: 'OCI label namespace 由 dev.r2k-ai.* 改為 dev.releaseasknowledge.* 對齊新 domain（README/docs 中英 8 檔，89 處）'
+    message: 'OCI label namespace 由 dev.r2k-ai.* 改為 com.releaseasknowledge.* 對齊新 domain（README/docs 中英 8 檔，89 處）'
   - timestamp: '2026-05-03T05:00:00.000Z'
     agent: claude-opus-4-7
     action: progress

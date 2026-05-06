@@ -1,0 +1,26 @@
+# Cloudflare Pages redirect rules
+# Format: from to status
+
+# Friendly URLs for manifesto
+/manifesto      /                    301
+/manifesto/zh   /                    301
+/manifesto/en   /en/                 301
+
+# Levels deep-link (scroll to section)
+/l1             /#levels              301
+/l2             /#levels              301
+/l3             /#levels              301
+/l4             /#levels              301
+
+# Modes deep-link
+/mode-a         /#modes               301
+/mode-b         /#modes               301
+
+# Common shortcuts → GitHub repo
+/spec           https://github.com/enjtorian/release-as-knowledge/blob/main/docs/manifesto.md   301
+/docs           https://github.com/enjtorian/release-as-knowledge/tree/main/docs                301
+/sign           https://github.com/enjtorian/release-as-knowledge/blob/main/SIGNATURES.md       301
+/repo           https://github.com/enjtorian/release-as-knowledge                                301
+
+# 404 fallback
+/* /404.html 404

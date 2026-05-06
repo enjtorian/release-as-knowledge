@@ -25,14 +25,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### 🏷️ L1 · Identity
 
-- Standardized OCI label set under `dev.releaseasknowledge.*` (reverse-DNS of `releaseasknowledge.dev`):
+- Standardized OCI label set under `com.releaseasknowledge.*` (reverse-DNS of `releaseasknowledge.com`):
   `version`, `level`, `commit`, `build-time`, `repo`, `snapshot.path`, `snapshot.index`, `diff.mode`, `diff.from`, `spec.url`.
-- Documented the **two-group label model** — OCI standard labels (`org.opencontainers.image.*`) + R2K-specific labels (`dev.releaseasknowledge.*`) — so images stay native to existing container tooling while opting into R2K.
+- Documented the **two-group label model** — OCI standard labels (`org.opencontainers.image.*`) + R2K-specific labels (`com.releaseasknowledge.*`) — so images stay native to existing container tooling while opting into R2K.
 
 ### 📦 L2 · Trust
 
 - Standard `/r2k/` snapshot directory: `meta/`, `api/`, `db/`, `config/`, `sbom/`, `runtime/`.
-- **`/r2k/index.yaml`** introduced as the snapshot entry index (schema `releaseasknowledge.dev/index/v1`) with `image`, `r2k`, `assets[]`, `extensions[]` blocks; per-asset `sha256` for tamper detection; vendor extensions via `x-yourco-*`.
+- **`/r2k/index.yaml`** introduced as the snapshot entry index (schema `releaseasknowledge.com/index/v1`) with `image`, `r2k`, `assets[]`, `extensions[]` blocks; per-asset `sha256` for tamper detection; vendor extensions via `x-yourco-*`.
 - Designed for **integration with existing collectors** (Atlas, Syft / CycloneDX, OpenAPI generators, Helm) rather than reinventing them.
 
 ### 🔍 L3 · Understand

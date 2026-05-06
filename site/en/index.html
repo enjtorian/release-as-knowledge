@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Release-as-Knowledge (R2K) · v1</title>
+<meta name="description" content="Release-as-Knowledge (R2K) — turn every release from a binary handoff into a structured, machine-indexable knowledge transfer. 8 principles · 4 levels (Identify / Trust / Understand / Share) · Mode A/B AB plan. CC BY 4.0.">
+<meta name="version" content="1.0">
+
+<meta property="og:title" content="Release-as-Knowledge (R2K)">
+<meta property="og:description" content="Turn every release from a binary handoff into a structured, machine-indexable knowledge transfer. 8 principles · 4 levels · Mode A/B AB plan.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://releaseasknowledge.com/en/">
+<meta property="og:image" content="https://releaseasknowledge.com/og-manifesto-en.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Release-as-Knowledge — turn every release into knowledge transfer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://releaseasknowledge.com/og-manifesto-en.png">
+
+<link rel="alternate" hreflang="en" href="https://releaseasknowledge.com/en/">
+<link rel="alternate" hreflang="zh-Hant" href="https://releaseasknowledge.com/">
+<link rel="canonical" href="https://releaseasknowledge.com/en/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32">
+<link rel="icon" href="/favicon-128.png" sizes="128x128">
+<link rel="apple-touch-icon" href="/favicon-512.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Fraunces:ital,wght@1,500&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --paper:#F8F5F0; --paper-deep:#F0EBE2; --ink:#1A1A1A; --ink-soft:#4A4A4A; --ink-faint:#8A8580;
+  --rule:#D8D2C7; --rule-faint:#E8E3D8; --accent:#C0392B; --accent-soft:#FCEAE6;
+  --level-1:#B7791F; --level-2:#2874A6; --level-3:#6C3483; --level-4:#1E8449;
+  --serif-display:'Newsreader',Georgia,serif;
+  --serif-body:'Newsreader',Georgia,serif;
+  --mono:'JetBrains Mono','SF Mono',Consolas,monospace;
+  --col-narrow:680px; --col-wide:1100px;
+  --gutter:clamp(1.25rem,3vw,2.5rem);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif-body);font-size:19px;line-height:1.7;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opacity:0.4;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.25rem var(--gutter);display:flex;justify-content:space-between;align-items:center;background:rgba(248,245,240,0.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid transparent;transition:border-color .2s;}
+.nav.scrolled{border-bottom-color:var(--rule);}
+.nav-mark{font-family:var(--mono);font-size:.75rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--ink);text-decoration:none;}
+.nav-mark span{color:var(--accent);}
+.nav-links{display:flex;gap:1.75rem;font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;}
+.nav-links a{color:var(--ink-soft);text-decoration:none;transition:color .15s;}
+.nav-links a:hover{color:var(--accent);}
+.nav-lang{color:var(--ink-faint);}
+@media(max-width:720px){.nav-links{display:none;}}
+
+.container{max-width:var(--col-wide);margin:0 auto;padding:0 var(--gutter);position:relative;z-index:2;}
+.narrow{max-width:var(--col-narrow);}
+
+.hero{min-height:100vh;padding:8rem 0 5rem;display:flex;align-items:center;position:relative;}
+.hero-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:5rem;align-items:center;}
+@media(max-width:900px){.hero-grid{grid-template-columns:1fr;gap:3rem;}}
+.hero-meta{font-family:var(--mono);font-size:.75rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:1.75rem;display:flex;align-items:center;gap:.75rem;}
+.hero-meta::before{content:'';display:block;width:28px;height:2px;background:var(--accent);}
+.hero-title{font-family:var(--serif-display);font-weight:400;font-size:clamp(3.2rem,8vw,6.4rem);line-height:.98;letter-spacing:-.03em;margin-bottom:1.25rem;font-variation-settings:"opsz" 72;}
+.hero-title em{font-style:italic;font-weight:500;color:var(--accent);font-variation-settings:"opsz" 72;}
+.hero-subtitle{font-size:clamp(1.15rem,2vw,1.4rem);font-style:italic;color:var(--ink-soft);margin-bottom:3rem;}
+.hero-thesis{border-left:2px solid var(--accent);padding-left:1.5rem;font-size:1.05rem;line-height:1.65;color:var(--ink);max-width:32rem;margin-bottom:2.5rem;}
+.hero-thesis strong{font-weight:600;}
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap;align-items:center;font-family:var(--mono);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;}
+.btn{display:inline-flex;align-items:center;gap:.6rem;padding:.95rem 1.6rem;text-decoration:none;font-weight:600;border:1.5px solid var(--ink);background:var(--ink);color:var(--paper);transition:all .18s;}
+.btn:hover{background:var(--accent);border-color:var(--accent);}
+.btn-ghost{background:transparent;color:var(--ink);}
+.btn-ghost:hover{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.btn-arrow{display:inline-block;transition:transform .2s;}
+.btn:hover .btn-arrow{transform:translateX(3px);}
+
+.hero-logo{display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.hex-logo{width:100%;max-width:380px;aspect-ratio:1;position:relative;}
+.hex-logo svg{width:100%;height:100%;display:block;}
+.hex-caption{margin-top:1.5rem;text-align:center;font-family:var(--mono);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-faint);line-height:1.6;}
+
+.section{padding:7rem 0;position:relative;}
+@media(max-width:720px){.section{padding:4.5rem 0;}}
+.section-eyebrow{font-family:var(--mono);font-size:.72rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:1.25rem;display:flex;align-items:center;gap:.85rem;}
+.section-eyebrow::before{content:'§';color:var(--ink-faint);font-family:var(--serif-body);font-size:1.2rem;}
+.section-title{font-family:var(--serif-display);font-weight:500;font-size:clamp(2.5rem,5vw,4rem);line-height:1.05;letter-spacing:-.02em;margin-bottom:1.5rem;font-variation-settings:"opsz" 72;}
+.section-title em{font-style:italic;font-weight:500;color:var(--accent);font-variation-settings:"opsz" 72;}
+.section-lead{font-size:1.2rem;line-height:1.65;color:var(--ink-soft);font-style:italic;max-width:36rem;margin-bottom:4.5rem;}
+
+.thesis{padding:8rem 0;background:var(--paper-deep);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);position:relative;}
+.thesis-quote{font-family:var(--serif-body);font-weight:500;font-size:clamp(1.6rem,3.6vw,2.5rem);line-height:1.4;color:var(--ink);letter-spacing:-.005em;font-variation-settings:"opsz" 72;margin-bottom:2.5rem;}
+.thesis-quote em{font-style:italic;font-weight:500;color:var(--accent);}
+.thesis-attr{font-family:var(--mono);font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);}
+.thesis-mark{font-family:var(--serif-display);font-size:8rem;line-height:1;color:var(--accent);opacity:.18;position:absolute;top:4rem;left:var(--gutter);pointer-events:none;font-weight:600;}
+
+.steps-section{background:var(--paper);border-top:1px solid var(--rule);}
+.steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:2rem;}
+@media(max-width:1000px){.steps-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:600px){.steps-grid{grid-template-columns:1fr;}}
+.step{padding:2rem 1.5rem;background:var(--paper-deep);border:1px solid var(--rule);position:relative;}
+.step::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--lc);}
+.step[data-step="1"]{--lc:var(--level-1);} .step[data-step="2"]{--lc:var(--level-2);} .step[data-step="3"]{--lc:var(--level-3);} .step[data-step="4"]{--lc:var(--level-4);}
+.step-num{font-family:var(--mono);font-size:.7rem;font-weight:700;letter-spacing:.18em;color:var(--lc);margin-bottom:.75rem;}
+.step-title{font-family:var(--serif-display);font-weight:500;font-size:1.4rem;line-height:1.15;margin-bottom:.75rem;font-variation-settings:"opsz" 72;}
+.step-tw{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;color:var(--ink-faint);margin-bottom:1rem;text-transform:uppercase;}
+.step-desc{font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+
+.levels-section{background:var(--ink);color:var(--paper);padding:7rem 0;}
+.levels-section .section-eyebrow{color:var(--accent-soft);}
+.levels-section .section-eyebrow::before{color:var(--ink-faint);}
+.levels-section .section-title{color:var(--paper);}
+.levels-section .section-lead{color:var(--rule);}
+.levels-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;margin-top:2rem;}
+@media(max-width:1000px){.levels-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:600px){.levels-grid{grid-template-columns:1fr;}}
+.level{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);padding:2rem 1.6rem;position:relative;transition:all .2s;}
+.level:hover{background:rgba(255,255,255,.08);transform:translateY(-3px);}
+.level::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--lc);}
+.level[data-level="1"]{--lc:var(--level-1);} .level[data-level="2"]{--lc:var(--level-2);} .level[data-level="3"]{--lc:var(--level-3);} .level[data-level="4"]{--lc:var(--level-4);}
+.level-num{font-family:var(--mono);font-size:.72rem;font-weight:700;letter-spacing:.18em;color:var(--lc);margin-bottom:.75rem;}
+.level-title{font-family:var(--serif-display);font-weight:500;font-size:1.5rem;line-height:1.15;margin-bottom:1rem;color:var(--paper);font-variation-settings:"opsz" 72;}
+.level-mech{font-family:var(--mono);font-size:.78rem;color:var(--rule);margin-bottom:1.5rem;}
+.level-detail{font-size:.92rem;line-height:1.55;color:var(--rule);margin-bottom:1.5rem;}
+.level-stats{display:flex;flex-direction:column;gap:.4rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,.12);}
+.level-stat{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.72rem;letter-spacing:.05em;}
+.level-stat-label{color:var(--ink-faint);text-transform:uppercase;}
+.level-stat-value{color:var(--paper);font-weight:500;}
+
+.one-line-summary{margin:4rem auto 0;padding:3.5rem 2rem;max-width:900px;text-align:center;border-top:1px solid rgba(255,255,255,.12);border-bottom:1px solid rgba(255,255,255,.12);}
+.one-line-eyebrow{font-family:var(--mono);font-size:.75rem;letter-spacing:.3em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:1.5rem;}
+.one-line-text{font-family:var(--serif-display);font-size:clamp(1.5rem,3.5vw,2.25rem);font-weight:400;letter-spacing:-.01em;line-height:1.4;color:var(--paper);}
+.one-line-text em{color:var(--accent);font-style:italic;}
+.one-line-tag{margin-top:1.5rem;font-size:1.05rem;font-style:italic;color:var(--rule);}
+
+.principles{display:flex;flex-direction:column;}
+.principle{display:grid;grid-template-columns:auto 1fr;gap:clamp(1.5rem,4vw,4rem);padding:3rem 0;border-top:1px solid var(--rule);align-items:baseline;}
+.principle:last-child{border-bottom:1px solid var(--rule);}
+.principle-num{font-family:var(--serif-display);font-weight:400;font-size:clamp(2.5rem,5vw,4.5rem);line-height:1;color:var(--ink-faint);letter-spacing:-.04em;min-width:2.5em;font-variation-settings:"opsz" 72;font-feature-settings:'lnum';}
+.principle-body h3{font-family:var(--serif-display);font-weight:500;font-size:clamp(1.4rem,2.6vw,1.85rem);line-height:1.2;letter-spacing:-.01em;margin-bottom:0.5rem;color:var(--ink);font-variation-settings:"opsz" 72;}
+.principle-body p{font-size:1.05rem;line-height:1.7;color:var(--ink-soft);max-width:38rem;}
+@media(max-width:720px){.principle{grid-template-columns:1fr;gap:.75rem;padding:2.25rem 0;} .principle-num{font-size:2rem;}}
+
+.modes-section{padding:6rem 0;background:var(--paper);border-top:1px solid var(--rule);}
+.modes-grid{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;margin:4rem 0 3rem;}
+@media(max-width:768px){.modes-grid{grid-template-columns:1fr;gap:1.75rem;}}
+.mode{padding:2rem 1.75rem;background:var(--paper-deep);border:1px solid var(--rule);position:relative;}
+.mode-a{border-top:4px solid var(--level-1);}
+.mode-b{border-top:4px solid var(--level-3);}
+.mode-tag{font-family:var(--mono);font-size:.75rem;font-weight:700;letter-spacing:.3em;margin-bottom:.5rem;}
+.mode-a .mode-tag{color:var(--level-1);}
+.mode-b .mode-tag{color:var(--level-3);}
+.mode-title{font-family:var(--serif-display);font-size:1.75rem;font-weight:500;margin:0 0 .25rem;color:var(--ink);}
+.mode-tw{font-style:italic;color:var(--ink-faint);margin:0 0 1.5rem;font-size:.95rem;}
+.mode-summary{color:var(--ink);line-height:1.65;margin:0 0 1.5rem;}
+.mode-features{list-style:none;padding:0;margin:0 0 1.5rem;border-top:1px solid var(--rule-faint);padding-top:1rem;}
+.mode-features li{font-size:.95rem;color:var(--ink-soft);padding:.35rem 0 .35rem 1.25rem;position:relative;}
+.mode-features li::before{content:'▸';position:absolute;left:0;color:var(--ink-faint);}
+.mode-fit,.mode-cost{margin:.75rem 0 0;font-size:.9rem;color:var(--ink-soft);line-height:1.5;}
+.mode-label{display:inline-block;font-family:var(--mono);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;margin-right:.5rem;color:var(--ink-faint);}
+
+.modes-recommendation{margin:3rem 0;padding:2rem;background:var(--accent-soft);border-left:4px solid var(--accent);}
+.modes-rec-eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.25em;color:var(--accent);text-transform:uppercase;margin-bottom:.5rem;}
+.modes-recommendation h3{font-family:var(--serif-display);font-size:1.4rem;font-weight:500;margin:0 0 1rem;color:var(--ink);}
+.modes-recommendation p{color:var(--ink);line-height:1.7;margin:0;}
+
+.modes-tradeoff-wrap{margin:4rem 0 2rem;}
+.modes-tradeoff-title{font-family:var(--serif-display);font-size:1.4rem;font-weight:500;margin-bottom:1.5rem;color:var(--ink);}
+.modes-tradeoff{width:100%;border-collapse:collapse;}
+.modes-tradeoff th{font-family:var(--mono);font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;text-align:left;padding:1rem .75rem;border-bottom:2px solid var(--ink);color:var(--ink);}
+.modes-tradeoff td{padding:.85rem .75rem;border-bottom:1px solid var(--rule-faint);color:var(--ink);font-size:.95rem;}
+.modes-tradeoff td.ok{color:#1E8449;font-weight:500;}
+.modes-tradeoff td.bad{color:var(--accent);}
+.modes-tradeoff td.meh{color:var(--level-1);}
+@media(max-width:600px){.modes-tradeoff{font-size:.85rem;} .modes-tradeoff th,.modes-tradeoff td{padding:.6rem .4rem;}}
+.modes-conclusion{margin-top:3rem;padding-top:2rem;border-top:1px solid var(--rule);font-style:italic;font-size:1.05rem;line-height:1.7;color:var(--ink-soft);}
+
+.distinction-table{margin-top:3rem;border-top:2px solid var(--ink);}
+.distinction-row{display:grid;grid-template-columns:1fr 1.6fr 1.6fr;border-bottom:1px solid var(--rule);padding:1.5rem 0;gap:1.5rem;}
+.distinction-row.header{border-bottom:1px solid var(--ink);font-family:var(--mono);font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);padding:1rem 0;}
+.distinction-row.header > div:nth-child(2){color:var(--ink-faint);}
+.distinction-row.header > div:nth-child(3){color:var(--accent);}
+.distinction-vs{font-family:var(--serif-display);font-style:italic;font-size:1.15rem;font-weight:500;color:var(--ink);font-variation-settings:"opsz" 72;}
+.distinction-them{color:var(--ink-faint);font-size:.95rem;line-height:1.55;}
+.distinction-r2k{color:var(--ink);font-size:.95rem;line-height:1.55;}
+@media(max-width:720px){.distinction-row{grid-template-columns:1fr;gap:.5rem;} .distinction-row.header{display:none;} .distinction-them::before{content:'Them: ';color:var(--ink-faint);font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;display:block;margin-top:.5rem;} .distinction-r2k::before{content:'R2K: ';color:var(--accent);font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;display:block;margin-top:.5rem;}}
+
+.join-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1.5rem;margin-top:3rem;}
+@media(max-width:1000px){.join-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:500px){.join-grid{grid-template-columns:1fr;}}
+.join-card{border:1.5px solid var(--ink);padding:2rem 1.5rem;background:transparent;text-decoration:none;color:var(--ink);transition:all .18s;display:flex;flex-direction:column;gap:.75rem;}
+.join-card:hover{background:var(--ink);color:var(--paper);transform:translateY(-2px);}
+.join-num{font-family:var(--mono);font-size:.7rem;letter-spacing:.18em;font-weight:700;}
+.join-card:hover .join-num{color:var(--accent-soft);}
+.join-title{font-family:var(--serif-display);font-weight:500;font-size:1.5rem;line-height:1.1;font-variation-settings:"opsz" 72;}
+.join-card:hover .join-title em{color:var(--accent-soft);}
+.join-title em{font-style:italic;color:var(--accent);font-variation-settings:"opsz" 72;}
+.join-desc{font-size:.92rem;line-height:1.55;color:var(--ink-soft);}
+.join-card:hover .join-desc{color:var(--rule);}
+
+.footer{padding:5rem 0 3rem;border-top:1px solid var(--rule);background:var(--paper-deep);}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:3rem;margin-bottom:3rem;}
+@media(max-width:720px){.footer-grid{grid-template-columns:1fr;gap:2rem;}}
+.footer-mark{font-family:var(--serif-display);font-size:1.5rem;font-weight:500;margin-bottom:.5rem;font-variation-settings:"opsz" 72;}
+.footer-mark em{font-style:italic;color:var(--accent);font-variation-settings:"opsz" 72;}
+.footer-tag{font-size:.95rem;font-style:italic;color:var(--ink-soft);line-height:1.6;}
+.footer-col h4{font-family:var(--mono);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:1rem;font-weight:700;}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:.5rem;font-family:var(--mono);font-size:.8rem;color:var(--ink-soft);}
+.footer-col a{color:var(--ink-soft);text-decoration:none;transition:color .15s;}
+.footer-col a:hover{color:var(--accent);}
+.footer-bottom{padding-top:2rem;border-top:1px solid var(--rule);display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;color:var(--ink-faint);text-transform:uppercase;}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.hero > *{animation:fadeIn .9s ease both;}
+.hero-meta{animation-delay:.05s;} .hero-title{animation-delay:.15s;} .hero-subtitle{animation-delay:.3s;} .hero-thesis{animation-delay:.45s;} .hero-actions{animation-delay:.6s;} .hero-logo{animation-delay:.5s;}
+.amp{font-family:var(--serif-display);font-style:italic;font-weight:400;color:var(--accent);}
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <a href="#top" class="nav-mark">R<span>2</span>K · MANIFESTO</a>
+  <div class="nav-links">
+    <a href="#thesis">Thesis</a>
+    <a href="#steps">Steps</a>
+    <a href="#manifesto">Manifesto</a>
+    <a href="#levels">Levels</a>
+    <a href="#modes">Modes</a>
+    <a href="#join">Join</a>
+    <a href="/" class="nav-lang">中文</a>
+  </div>
+</nav>
+
+<section class="hero" id="top">
+  <div class="container hero-grid">
+    <div>
+      <div class="hero-meta">Release-as-Knowledge · Manifesto v1</div>
+      <h1 class="hero-title">Release<br>as <em>Knowledge</em></h1>
+      <p class="hero-subtitle">Ship knowledge with the artifact, not just the binary · R2K v1</p>
+      <p class="hero-thesis">
+        The past decade pipelined our <strong>code</strong> — git, CI/CD, registries, helm.
+        The next decade will pipeline <strong>everything around code</strong>.
+      </p>
+      <div class="hero-actions">
+        <a href="#manifesto" class="btn">Read the Manifesto <span class="btn-arrow">↓</span></a>
+        <a href="#join" class="btn btn-ghost">Adopt R2K <span class="btn-arrow">→</span></a>
+      </div>
+    </div>
+    <div class="hero-logo">
+      <div class="hex-logo">
+        <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="200,30 348,115 348,285 200,370 52,285 52,115" fill="#1A1A1A"/>
+          <polygon points="200,55 326,128 326,272 200,345 74,272 74,128" fill="none" stroke="#C0392B" stroke-width="1" opacity="0.5"/>
+          <text x="200" y="225" text-anchor="middle" font-family="Fraunces, serif" font-size="120" font-weight="500" fill="#F8F5F0" font-style="italic">R2K</text>
+          <circle cx="200" cy="265" r="3" fill="#C0392B"/>
+        </svg>
+      </div>
+      <div class="hex-caption">Image as<br>Knowledge Vehicle</div>
+    </div>
+  </div>
+</section>
+
+<section class="thesis" id="thesis">
+  <div class="thesis-mark">"</div>
+  <div class="container narrow">
+    <p class="thesis-quote">
+      The knowledge in your team's heads ships when a new version goes out ──<br>
+      but that knowledge <em>does not</em> travel with the image.
+    </p>
+    <p class="thesis-attr">The R2K Thesis</p>
+  </div>
+</section>
+
+<section class="section steps-section" id="steps">
+  <div class="container">
+    <div class="section-eyebrow">Adoption Path</div>
+    <h2 class="section-title">The 4-Step <em>Path</em></h2>
+    <p class="section-lead">From "ship a binary" to "ship knowledge" — R2K v1 unfolds as four incrementally-adoptable steps. Each has its own tooling and validation.</p>
+
+    <div class="steps-grid">
+      <article class="step" data-step="1">
+        <div class="step-num">STEP 1</div>
+        <h3 class="step-title">LABEL</h3>
+        <div class="step-tw">Identify · 5 lines of Dockerfile</div>
+        <p class="step-desc">Attach OCI standard labels (<code>org.opencontainers.image.*</code>) and R2K labels (<code>com.releaseasknowledge.*</code>) to declare release identity.</p>
+      </article>
+      <article class="step" data-step="2">
+        <div class="step-num">STEP 2</div>
+        <h3 class="step-title">Snapshot</h3>
+        <div class="step-tw">Trust · automated collection</div>
+        <p class="step-desc">At build time, dump OpenAPI / DB schema / config / SBOM into <code>/r2k/</code>, with <code>/r2k/index.yaml</code> as the entry index.</p>
+      </article>
+      <article class="step" data-step="3">
+        <div class="step-num">STEP 3</div>
+        <h3 class="step-title">Diff</h3>
+        <div class="step-tw">Understand · plugin SPI</div>
+        <p class="step-desc">Diff two releases' snapshots across assets, producing a unified <code>change.yaml</code>. One plugin per asset class.</p>
+      </article>
+      <article class="step" data-step="4">
+        <div class="step-num">STEP 4</div>
+        <h3 class="step-title">Insight</h3>
+        <div class="step-tw">Share · cross-asset correlation</div>
+        <p class="step-desc">Correlate diffs across assets into risk insight. Plug in LLMs, rule engines, or policy-as-code; emit an R2K badge.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="manifesto">
+  <div class="container narrow">
+    <div class="section-eyebrow">The Manifesto</div>
+    <h2 class="section-title">Eight <em>Principles</em></h2>
+    <p class="section-lead">R2K is not a product. Not a tool. Not a vendor. It is a thesis with eight principles — a description of how software releases <em class="amp">should</em> work, and rarely do.</p>
+
+    <div class="principles">
+      <article class="principle" style="border-left:3px solid var(--accent);padding-left:1.25rem;">
+        <div class="principle-num" style="color:var(--accent);">01</div>
+        <div class="principle-body">
+          <h3>Artifact carries facts, not intelligence</h3>
+          <p>The OCI image stores L1 (LABEL) + L2 (snapshots: API spec, DB schema, config) — these are <em class="amp">facts</em>. L3 (Change Manifest) is <em class="amp">intelligence</em> — computed from facts, not baked into the image.</p>
+          <p style="margin-top:.75rem;font-style:italic;color:var(--ink-soft);">
+            git: commits store snapshots; diffs are computed.<br>
+            SBOM: stores component lists; vulnerability scans are computed.<br>
+            <strong>R2K does to OCI images what git does to source code.</strong>
+          </p>
+        </div>
+      </article>
+
+      <article class="principle"><div class="principle-num">02</div><div class="principle-body">
+        <h3>Knowledge ships with the artifact</h3>
+        <p>API spec, config schema, migration plan, SBOM should ship, version, and circulate alongside the image — collected automatically at build time, not written by hand after the fact.</p>
+      </div></article>
+
+      <article class="principle"><div class="principle-num">03</div><div class="principle-body">
+        <h3>Implicit must become explicit</h3>
+        <p>Knowledge like "which API broke", "which migration is dangerous", "which config is now required" cannot live in engineers' heads or PR descriptions. It must be structurally extracted at build time and made machine-readable.</p>
+      </div></article>
+
+      <article class="principle"><div class="principle-num">04</div><div class="principle-body">
+        <h3>Standards over invention</h3>
+        <p>Use OCI Referrers when you can. Use CycloneDX when you can. Use OpenAPI when you can. R2K integrates the outputs of existing industry tools — it does <em class="amp">not</em> reinvent them.</p>
+      </div></article>
+
+      <article class="principle"><div class="principle-num">05</div><div class="principle-body">
+        <h3>Designed for non-developers</h3>
+        <p>R2K serves support, sales, customer DevOps, auditors, and compliance teams — not developers (who already have git, PRs, Slack). Every output assumes the reader <em class="amp">cannot</em> read code or git logs.</p>
+      </div></article>
+
+      <article class="principle"><div class="principle-num">06</div><div class="principle-body">
+        <h3>Layered by query frequency</h3>
+        <p>High-frequency lightweight queries (version, case_type) use LABEL indexes (~50ms). Low-frequency heavy queries (SBOM, test report) use metadata layers (~300ms). Full deep queries use the Change Manifest.</p>
+      </div></article>
+
+      <article class="principle"><div class="principle-num">07</div><div class="principle-body">
+        <h3>Compatible with existing pipelines</h3>
+        <p>R2K does not require a CI/CD rewrite. Start with 5 lines of Dockerfile at Level 1 — every level has independent value, adoption is incremental.</p>
+      </div></article>
+
+      <article class="principle"><div class="principle-num">08</div><div class="principle-body">
+        <h3>Manifests are the lingua franca</h3>
+        <p>Change Manifest, License Manifest, Network Contract — structured yaml/json bridges tools, organizations, and human/machine readability. <em class="amp">More precise</em> than release notes, <em class="amp">more current</em> than wikis, <em class="amp">more traceable</em> than Slack threads.</p>
+      </div></article>
+    </div>
+  </div>
+</section>
+
+<section class="levels-section" id="levels">
+  <div class="container">
+    <div class="section-eyebrow" style="color:#C0392B;">Compliance Tiers</div>
+    <h2 class="section-title">Four <em>Levels</em></h2>
+    <p class="section-lead">Like SLSA, R2K is adopted gradually. Each level stands alone — "We are R2K Level 2" is as legitimate as "We are SLSA Level 3".</p>
+
+    <div class="levels-grid">
+      <article class="level" data-level="1">
+        <div class="level-num">L1 · IDENTIFY</div>
+        <h3 class="level-title">Identity · <em>Identify</em></h3>
+        <p class="level-mech">Docker LABEL · build-arg</p>
+        <p class="level-detail">All production images carry OCI standard labels (<code>org.opencontainers.image.*</code>) plus the R2K namespace (<code>com.releaseasknowledge.*</code>); any scanner reads them in milliseconds.</p>
+        <div class="level-stats">
+          <div class="level-stat"><span class="level-stat-label">Cost</span><span class="level-stat-value">1–2 weeks</span></div>
+          <div class="level-stat"><span class="level-stat-label">Win</span><span class="level-stat-value">90% queries instant</span></div>
+        </div>
+      </article>
+
+      <article class="level" data-level="2">
+        <div class="level-num">L2 · TRUST</div>
+        <h3 class="level-title">State · <em>Trust</em></h3>
+        <p class="level-mech">/r2k/* snapshots · index.yaml</p>
+        <p class="level-detail">+ OpenAPI, DB schema, config, SBOM, and runtime manifest baked into <code>/r2k/</code>, with <code>index.yaml</code> listing every asset and its sha256 for tamper detection.</p>
+        <div class="level-stats">
+          <div class="level-stat"><span class="level-stat-label">Cost</span><span class="level-stat-value">2–3 weeks</span></div>
+          <div class="level-stat"><span class="level-stat-label">Win</span><span class="level-stat-value">Audit in real time</span></div>
+        </div>
+      </article>
+
+      <article class="level" data-level="3">
+        <div class="level-num">L3 · UNDERSTAND</div>
+        <h3 class="level-title">Change · <em>Understand</em></h3>
+        <p class="level-mech">change.yaml · diff plugin SPI</p>
+        <p class="level-detail">+ Unified <code>change.yaml</code> across API/DB/Config/SBOM. <strong>L3 is derived intelligence</strong> — computed from L1+L2; Mode A pre-computed / Mode B on-demand (see below).</p>
+        <div class="level-stats">
+          <div class="level-stat"><span class="level-stat-label">Cost</span><span class="level-stat-value">6–8 weeks</span></div>
+          <div class="level-stat"><span class="level-stat-label">Win</span><span class="level-stat-value">30 min → 5 sec</span></div>
+        </div>
+      </article>
+
+      <article class="level" data-level="4">
+        <div class="level-num">L4 · SHARE</div>
+        <h3 class="level-title">Distribution · <em>Share</em></h3>
+        <p class="level-mech">OCI Referrers · badge · cross-org</p>
+        <p class="level-detail">+ Fully OCI 1.1, R2K artifacts travel across organizations, customer-side reads them offline, and an R2K badge (Level + Mode) is published.</p>
+        <div class="level-stats">
+          <div class="level-stat"><span class="level-stat-label">Cost</span><span class="level-stat-value">4 weeks</span></div>
+          <div class="level-stat"><span class="level-stat-label">Win</span><span class="level-stat-value">Customers + sales onboard</span></div>
+        </div>
+      </article>
+    </div>
+
+    <div class="one-line-summary">
+      <div class="one-line-eyebrow">In One Line</div>
+      <p class="one-line-text">L1 = <em>Identify</em> · L2 = <em>Trust</em> · L3 = <em>Understand</em> · L4 = <em>Share</em></p>
+      <p class="one-line-tag">Turns "shipping software" into "shipping interpretable change intelligence".</p>
+    </div>
+  </div>
+</section>
+
+<section class="modes-section" id="modes">
+  <div class="container narrow">
+    <div class="section-eyebrow">L3 AB Plan</div>
+    <h2 class="section-title">Two <em>Modes</em> for L3</h2>
+    <p class="section-lead">L3 is derived intelligence — but <em class="amp">when</em> it gets derived has two legitimate options. R2K v1 introduces Mode A / Mode B so the same spec serves air-gap ISVs and SaaS vendors alike.</p>
+
+    <div class="modes-grid">
+      <article class="mode mode-a">
+        <div class="mode-tag">MODE A</div>
+        <h3 class="mode-title">Pre-computed</h3>
+        <p class="mode-tw">Computed in CI · attached to image</p>
+        <p class="mode-summary">CI computes the Change Manifest ahead of time and attaches it to the image. Customer side needs no Diff Engine service.</p>
+        <ul class="mode-features">
+          <li>Manifest ships with the image</li>
+          <li>CI default: from = previous version</li>
+          <li>Customer reads stored manifest</li>
+        </ul>
+        <p class="mode-fit"><span class="mode-label">Fit</span> Air-gap on-prem ISVs; customer DevOps cannot reach back to vendor</p>
+        <p class="mode-cost"><span class="mode-label">Cost</span> from→to pair is locked; rule upgrades require rebuild</p>
+      </article>
+
+      <article class="mode mode-b">
+        <div class="mode-tag">MODE B</div>
+        <h3 class="mode-title">On-demand</h3>
+        <p class="mode-tw">Computed at query time</p>
+        <p class="mode-summary">CI attaches only L1+L2 snapshots; the Diff Engine computes at query time. Any from→to combination is queryable.</p>
+        <ul class="mode-features">
+          <li>Manifest not in the image (cacheable)</li>
+          <li>Old images auto-benefit from rule upgrades</li>
+          <li>Diff Engine service must be hosted</li>
+        </ul>
+        <p class="mode-fit"><span class="mode-label">Fit</span> SaaS, connected enterprise, open-source tools</p>
+        <p class="mode-cost"><span class="mode-label">Cost</span> First query slightly slower (cacheable); host the Diff Engine</p>
+      </article>
+    </div>
+
+    <div class="modes-recommendation">
+      <div class="modes-rec-eyebrow">Recommended</div>
+      <h3>Both modes side by side</h3>
+      <p>For major releases, ship both: Mode A's default-pair manifest baked into the image (so air-gap customers can use it directly), and L2 snapshots kept complete (so connected customers can recompute any other combination via Mode B). <strong>The underlying mechanism is identical</strong> — what differs is when the manifest is computed.</p>
+    </div>
+
+    <div class="modes-tradeoff-wrap">
+      <h3 class="modes-tradeoff-title">Trade-off matrix</h3>
+      <table class="modes-tradeoff">
+        <thead>
+          <tr><th>Dimension</th><th>Mode A</th><th>Mode B</th><th>Both</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Air-gap friendly</td><td class="ok">✓ Perfect</td><td class="bad">✗ Service required</td><td class="ok">✓</td></tr>
+          <tr><td>Arbitrary from→to</td><td class="bad">✗ Locked</td><td class="ok">✓ Full</td><td class="ok">✓</td></tr>
+          <tr><td>Auto-benefit from rule updates</td><td class="bad">✗ Needs rebuild</td><td class="ok">✓ Automatic</td><td class="meh">△ Partial</td></tr>
+          <tr><td>CI integration complexity</td><td class="ok">✓ Simple</td><td class="ok">✓ Simple</td><td class="meh">△ Medium</td></tr>
+          <tr><td>Customer-side complexity</td><td class="ok">✓ Simple</td><td class="meh">△ Connection required</td><td class="meh">△ Path-dependent</td></tr>
+          <tr><td>Best for</td><td>ISV / on-prem</td><td>SaaS</td><td>Hybrid</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="modes-conclusion">
+      R2K <strong>as a framework does not prescribe which</strong> — but <strong>Principle 1 (facts vs intelligence) makes both modes legitimate</strong>. The choice depends on whether your customer side can reach your service.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container narrow">
+    <div class="section-eyebrow">Distinction</div>
+    <h2 class="section-title">What R2K <em>Isn't</em></h2>
+    <p class="section-lead">Clear boundaries make a thesis useful. R2K overlaps with several existing concepts but solves a different problem.</p>
+
+    <div class="distinction-table">
+      <div class="distinction-row header"><div>vs.</div><div>That concept solves...</div><div>R2K solves...</div></div>
+
+      <div class="distinction-row">
+        <div class="distinction-vs">SBOM</div>
+        <div class="distinction-them">Software bill of materials — primarily for security & compliance teams.</div>
+        <div class="distinction-r2k">SBOM is a subset of R2K (contained in L2). R2K covers more dimensions and targets non-developers.</div>
+      </div>
+
+      <div class="distinction-row">
+        <div class="distinction-vs">SLSA</div>
+        <div class="distinction-them">How this image was built and whether it was tampered with — supply chain security.</div>
+        <div class="distinction-r2k">What this image means for users — change communication.</div>
+      </div>
+
+      <div class="distinction-row">
+        <div class="distinction-vs">Release Notes</div>
+        <div class="distinction-them">A human-written narrative byproduct, for human readers to skim.</div>
+        <div class="distinction-r2k">An automated, structured, machine-readable primary artifact — release notes are derived from it.</div>
+      </div>
+
+      <div class="distinction-row">
+        <div class="distinction-vs">Documentation</div>
+        <div class="distinction-them">Hand-written; perpetually out of sync with the version it claims to describe.</div>
+        <div class="distinction-r2k">Ships with the image and stays in sync; produced automatically at build time.</div>
+      </div>
+
+      <div class="distinction-row">
+        <div class="distinction-vs">Helm Chart</div>
+        <div class="distinction-them">A declarative deploy spec — tells you "how to deploy".</div>
+        <div class="distinction-r2k">A descriptive release manifest — tells you "what changed in this release".</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="join" style="background:var(--paper-deep);border-top:1px solid var(--rule);">
+  <div class="container">
+    <div class="section-eyebrow">Get Involved</div>
+    <h2 class="section-title">Five Ways to <em>Join</em></h2>
+    <p class="section-lead">A manifesto without action is decoration. Pick the path that fits where you are right now.</p>
+
+    <div class="join-grid">
+      <a href="https://github.com/enjtorian/release-as-knowledge/blob/main/SIGNATURES.md" class="join-card">
+        <div class="join-num">01</div><div class="join-title"><em>Sign</em></div>
+        <div class="join-desc">Add your name to SIGNATURES.md to publicly endorse the R2K Manifesto.</div>
+      </a>
+      <a href="https://github.com/enjtorian/release-as-knowledge#step-1--docker-label-l1--identify" class="join-card">
+        <div class="join-num">02</div><div class="join-title"><em>Adopt</em></div>
+        <div class="join-desc">Reach R2K Level 1 in your production image pipeline. 1–2 weeks.</div>
+      </a>
+      <a href="https://github.com/enjtorian/release-as-knowledge" class="join-card">
+        <div class="join-num">03</div><div class="join-title"><em>Share</em></div>
+        <div class="join-desc">Forward to engineering leads, DevOps, and support to start the internal conversation.</div>
+      </a>
+      <a href="https://github.com/enjtorian/release-as-knowledge/issues" class="join-card">
+        <div class="join-num">04</div><div class="join-title"><em>Extend</em></div>
+        <div class="join-desc">Propose vendor extensions (<code>x-yourco-*</code>) or new diff plugins.</div>
+      </a>
+      <a href="https://github.com/enjtorian/release-as-knowledge/issues/new" class="join-card">
+        <div class="join-num">05</div><div class="join-title"><em>Challenge</em></div>
+        <div class="join-desc">Tell us what's wrong. R2K is a thesis, not dogma — debate sharpens it.</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-mark">R2K · <em>Release-as-Knowledge</em></div>
+        <p class="footer-tag">A thesis, a manifesto, and an incremental adoption path — for the decade in which everything around the code gets pipelined.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Spec</h4>
+        <ul>
+          <li><a href="https://enjtorian.github.io/release-as-knowledge/manifesto/">Manifesto v1</a></li>
+          <li><a href="https://enjtorian.github.io/release-as-knowledge/quickstart/">Quick Start</a></li>
+          <li><a href="https://enjtorian.github.io/release-as-knowledge/glossary/">Glossary</a></li>
+          <li><a href="https://enjtorian.github.io/release-as-knowledge/faq/">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Inspired By</h4>
+        <ul>
+          <li>12-Factor App</li>
+          <li>SBOM (CycloneDX)</li>
+          <li>SLSA</li>
+          <li>OpenAPI</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>R2K Manifesto v1 · May 2026</div>
+      <div>License: CC BY 4.0 — Cite freely, modify openly</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 20) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
+  });
+</script>
+</body>
+</html>

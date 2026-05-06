@@ -33,7 +33,7 @@ The R2K design thesis: 8 principles, 4 levels, the Mode A/B duality. See [docs/m
 Fact layer. Declares release identity through two label groups:
 
 - **OCI standard labels** (`org.opencontainers.image.*`) — predefined by the [OCI Image Spec annotations](https://github.com/opencontainers/image-spec/blob/main/annotations.md), natively supported by all container tooling (`title`, `version`, `revision`, `created`, `source`, `licenses`, `vendor`, …)
-- **R2K-specific labels** (`dev.releaseasknowledge.*`) — R2K's own namespace (`version`, `level`, `commit`, `build-time`, `repo`, `snapshot.path`, `snapshot.index`, `diff.mode`, `diff.from`, …)
+- **R2K-specific labels** (`com.releaseasknowledge.*`) — R2K's own namespace (`version`, `level`, `commit`, `build-time`, `repo`, `snapshot.path`, `snapshot.index`, `diff.mode`, `diff.from`, …)
 
 R2K does not redefine fields that OCI already provides. Use both groups together.
 **Validation**: `r2k validate identity`.
@@ -79,7 +79,7 @@ The image carries Mode A's default-pair manifest, while L2 snapshots are kept co
 
 ### `/r2k/index.yaml`
 **Entry-point index for the L2 snapshot**. Lists every R2K asset in the image (path, schema, sha256, collector). The **first thing downstream consumers should read**.
-Schema: `releaseasknowledge.dev/index/v1`. Top-level fields: `image.{ref,digest}`, `r2k.{spec_version,level,diff_mode}`, `assets[]`, `extensions[]`.
+Schema: `releaseasknowledge.com/index/v1`. Top-level fields: `image.{ref,digest}`, `r2k.{spec_version,level,diff_mode}`, `assets[]`, `extensions[]`.
 Plays the same role as OCI's `manifest.json` or CycloneDX's `bom-ref` table — **records facts only**, never intelligence.
 
 ### `/r2k/meta/manifest.json`

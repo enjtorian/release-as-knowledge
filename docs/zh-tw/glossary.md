@@ -35,7 +35,7 @@ R2K 的設計哲學陳述，包含 8 條原則、4 個 Level、Mode A/B 雙模�
 事實層。透過兩組 OCI label 宣告 release 的身份：
 
 - **OCI 標準 label**（`org.opencontainers.image.*`）— 由 [OCI Image Spec annotations](https://github.com/opencontainers/image-spec/blob/main/annotations.md) 預先定義，所有 container 工具原生支援（`title`、`version`、`revision`、`created`、`source`、`licenses`、`vendor` 等）。
-- **R2K 專屬 label**（`dev.releaseasknowledge.*`）— R2K 規格自己的 namespace（`version`、`level`、`commit`、`build-time`、`repo`、`snapshot.path`、`snapshot.index`、`diff.mode`、`diff.from` 等）。
+- **R2K 專屬 label**（`com.releaseasknowledge.*`）— R2K 規格自己的 namespace（`version`、`level`、`commit`、`build-time`、`repo`、`snapshot.path`、`snapshot.index`、`diff.mode`、`diff.from` 等）。
 
 R2K 不重新定義 OCI 已有的欄位，兩組同時掛即可。
 **驗證**：`r2k validate identity`。
@@ -80,7 +80,7 @@ Image 內帶 Mode A 的「預設配對」manifest，L2 snapshots 完整保留以
 
 ### `/r2k/index.yaml`
 **L2 snapshot 入口清單**。列出 image 內所有 R2K 資產（path、schema、sha256、collector），是下游讀 R2K snapshot 的**第一站**。
-schema 為 `releaseasknowledge.dev/index/v1`，欄位包含 `image.{ref,digest}`、`r2k.{spec_version,level,diff_mode}`、`assets[]`、`extensions[]`。
+schema 為 `releaseasknowledge.com/index/v1`，欄位包含 `image.{ref,digest}`、`r2k.{spec_version,level,diff_mode}`、`assets[]`、`extensions[]`。
 與 OCI 的 `manifest.json`、CycloneDX 的 `bom-ref` 表角色相同 — **只記事實**（path / hash / schema），不記解讀。
 
 ### `/r2k/meta/manifest.json`

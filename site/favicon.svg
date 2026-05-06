@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96">
+  <!-- Dark hexagonal background -->
+  <polygon points="48,8 80,26 80,70 48,88 16,70 16,26"
+           fill="#1A1A1A"/>
+
+  <!-- Inner red accent (very subtle, only shows >= 32px) -->
+  <polygon points="48,14 75,30 75,66 48,82 21,66 21,30"
+           fill="none" stroke="#C0392B" stroke-width="0.8" opacity="0.5"/>
+
+  <!-- Single italic R (keeps recognizable at favicon sizes) -->
+  <text x="48" y="62" text-anchor="middle"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="44" font-weight="600" font-style="italic"
+        fill="#F8F5F0">R</text>
+
+  <!-- Red dot detail -->
+  <circle cx="48" cy="72" r="1.8" fill="#C0392B"/>
+</svg>

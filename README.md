@@ -43,17 +43,17 @@ R2K does not require you to do everything at once. It is an **incrementally adop
 
 ### Step 1 · Docker LABEL (L1 · Identify)
 
-Attach OCI labels to the image so anyone can `docker inspect` and read the facts — using both **OCI standard labels** (`org.opencontainers.image.*`) and **R2K-specific labels** (`dev.releaseasknowledge.*`).
+Attach OCI labels to the image so anyone can `docker inspect` and read the facts — using both **OCI standard labels** (`org.opencontainers.image.*`) and **R2K-specific labels** (`com.releaseasknowledge.*`).
 
 ```dockerfile
 LABEL org.opencontainers.image.revision="${COMMIT_SHA}"
 LABEL org.opencontainers.image.created="${BUILD_TIME}"
 LABEL org.opencontainers.image.source="https://github.com/your-org/your-repo"
 
-LABEL dev.releaseasknowledge.version="1.0"
-LABEL dev.releaseasknowledge.level="1"
-LABEL dev.releaseasknowledge.commit="${COMMIT_SHA}"
-LABEL dev.releaseasknowledge.build-time="${BUILD_TIME}"
+LABEL com.releaseasknowledge.version="1.0"
+LABEL com.releaseasknowledge.level="1"
+LABEL com.releaseasknowledge.commit="${COMMIT_SHA}"
+LABEL com.releaseasknowledge.build-time="${BUILD_TIME}"
 ```
 
 A few extra lines of Dockerfile, no new tooling required, no registry change.
