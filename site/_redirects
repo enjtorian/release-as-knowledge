@@ -22,5 +22,6 @@
 /sign           https://github.com/enjtorian/release-as-knowledge/blob/main/SIGNATURES.md       301
 /repo           https://github.com/enjtorian/release-as-knowledge                                301
 
-# 404 fallback
-/* /404.html 404
+# 404 fallback: Cloudflare Pages auto-serves /404.html for unmatched paths.
+# Do NOT add an explicit `/* /404.html 404` rule — status 404 is rejected
+# by the new Workers-based Pages backend (only 200/301/302/303/307/308 allowed).
