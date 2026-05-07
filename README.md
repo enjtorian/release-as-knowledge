@@ -171,6 +171,19 @@ R2K v1 deliberately does not prescribe one answer to "when is the diff computed"
 
 ---
 
+## Authors
+
+**Primary author**: **Ted Enjtorian** — *R2K framework observer & primary author*
+
+- LinkedIn: <https://tw.linkedin.com/in/enjtorian>
+- GitHub: [@enjtorian](https://github.com/enjtorian)
+
+A 20+-year software systems architect. R2K's design intent is not to invent new tools, but to *name a semantic layer that already exists implicitly in every production system* — separating facts (L1+L2) from intelligence (L3+L4) and integrating existing standards (OCI, CycloneDX, OpenAPI, Atlas …).
+
+R2K is an open standard initiative — community contributions are welcomed and acknowledged. See [AUTHORS.md](./AUTHORS.md) for the full list, contribution areas, and citation format.
+
+---
+
 ## Documentation map
 
 - [📜 R2K Manifesto v1](./docs/manifesto.md) ・ [繁體中文](./docs/zh-tw/manifesto.md)

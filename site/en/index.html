@@ -21,10 +21,74 @@
 <link rel="alternate" hreflang="en" href="https://releaseasknowledge.com/en/">
 <link rel="alternate" hreflang="zh-Hant" href="https://releaseasknowledge.com/">
 <link rel="canonical" href="https://releaseasknowledge.com/en/">
+<link rel="alternate" type="text/markdown" title="LLM-friendly site summary" href="/llms.txt">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32.png" sizes="32x32">
 <link rel="icon" href="/favicon-128.png" sizes="128x128">
 <link rel="apple-touch-icon" href="/favicon-512.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://releaseasknowledge.com/en/#website",
+      "url": "https://releaseasknowledge.com/en/",
+      "name": "Release-as-Knowledge (R2K)",
+      "description": "A thesis, manifesto, and incremental adoption path that turns every release from a binary handoff into structured, machine-readable knowledge transfer. 8 principles · 4 levels · Mode A/B.",
+      "inLanguage": "en",
+      "license": "https://creativecommons.org/licenses/by/4.0/"
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://releaseasknowledge.com/#org",
+      "name": "Release-as-Knowledge",
+      "url": "https://releaseasknowledge.com/",
+      "logo": "https://releaseasknowledge.com/favicon-512.png",
+      "founder": { "@id": "https://releaseasknowledge.com/#author-ted" },
+      "sameAs": [
+        "https://github.com/enjtorian/release-as-knowledge",
+        "https://enjtorian.github.io/release-as-knowledge/"
+      ]
+    },
+    {
+      "@type": "Person",
+      "@id": "https://releaseasknowledge.com/#author-ted",
+      "name": "Ted Enjtorian",
+      "jobTitle": "R2K Framework Observer & Primary Author",
+      "description": "Software systems architect with 20+ years of experience. Authored the R2K Manifesto v1, the 4-step adoption path, and the Mode A/B AB plan for L3 computation timing.",
+      "url": "https://github.com/enjtorian",
+      "sameAs": [
+        "https://github.com/enjtorian",
+        "https://tw.linkedin.com/in/enjtorian"
+      ]
+    },
+    {
+      "@type": "ItemList",
+      "@id": "https://releaseasknowledge.com/en/#articles",
+      "name": "R2K Reading List (English)",
+      "inLanguage": "en",
+      "itemListOrder": "https://schema.org/ItemListOrderAscending",
+      "numberOfItems": 2,
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "url": "https://enjtorian.github.io/release-as-knowledge/",
+          "name": "R2K v1 · Release-as-Knowledge"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "url": "https://dev.to/enjtorian/release-as-knowledge-01-the-support-engineers-30-minutes-4if2",
+          "name": "[Release-as-Knowledge-01] The Support Engineer's 30 Minutes"
+        }
+      ]
+    }
+  ]
+}
+</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -212,6 +276,38 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opa
 .footer-col a:hover{color:var(--accent);}
 .footer-bottom{padding-top:2rem;border-top:1px solid var(--rule);display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;color:var(--ink-faint);text-transform:uppercase;}
 
+.articles-section{background:var(--paper);border-top:1px solid var(--rule);}
+.articles-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:2rem;}
+.article-card{display:flex;flex-direction:column;gap:.85rem;padding:1.85rem 1.5rem 1.5rem;background:var(--paper-deep);border:1px solid var(--rule);text-decoration:none;color:var(--ink);position:relative;transition:transform .18s ease,border-color .18s ease;}
+.article-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent);}
+.article-card:hover{transform:translateY(-3px);border-color:var(--ink);}
+.article-source{font-family:var(--mono);font-size:.7rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);}
+.article-title{font-family:var(--serif-display);font-weight:500;font-size:1.35rem;line-height:1.25;color:var(--ink);font-variation-settings:"opsz" 72;}
+.article-blurb{font-family:var(--serif-body);font-size:.95rem;line-height:1.6;color:var(--ink-soft);flex:1;}
+.article-meta{margin-top:.5rem;padding-top:.85rem;border-top:1px solid var(--rule);display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);}
+.article-arrow{color:var(--ink-faint);transition:transform .18s ease,color .18s ease;}
+.article-card:hover .article-arrow{transform:translate(3px,-3px);color:var(--accent);}
+.articles-pager{display:flex;justify-content:center;align-items:center;gap:1.25rem;margin-top:2.5rem;font-family:var(--mono);font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;}
+.pager-btn{background:transparent;border:1.5px solid var(--ink);color:var(--ink);padding:.65rem 1.2rem;cursor:pointer;font-family:inherit;font-size:inherit;letter-spacing:inherit;text-transform:inherit;transition:all .18s ease;}
+.pager-btn:hover:not(:disabled){background:var(--ink);color:var(--paper);}
+.pager-btn:disabled{border-color:var(--rule);color:var(--ink-faint);cursor:not-allowed;}
+.page-indicator{color:var(--ink-soft);min-width:7rem;text-align:center;}
+
+.author-section{background:var(--paper-deep);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);}
+.author-grid{display:grid;grid-template-columns:1fr 1.6fr;gap:3rem;align-items:start;}
+@media(max-width:720px){.author-grid{grid-template-columns:1fr;gap:1.5rem;}}
+.author-card-name{font-family:var(--serif-display);font-weight:500;font-size:clamp(2rem,4vw,2.75rem);line-height:1.1;letter-spacing:-.02em;color:var(--ink);margin-bottom:.75rem;font-variation-settings:"opsz" 72;}
+.author-card-name em{font-style:italic;color:var(--accent);font-variation-settings:"opsz" 72;}
+.author-role{font-family:var(--mono);font-size:.78rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:1.5rem;}
+.author-bio{font-size:1rem;line-height:1.7;color:var(--ink);margin-bottom:1.5rem;}
+.author-bio p + p{margin-top:1rem;}
+.author-bio em{color:var(--accent);font-style:italic;}
+.author-links{display:flex;gap:1rem;flex-wrap:wrap;font-family:var(--mono);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;}
+.author-link{display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 1.15rem;border:1.5px solid var(--ink);background:transparent;color:var(--ink);text-decoration:none;transition:all .18s ease;}
+.author-link:hover{background:var(--ink);color:var(--paper);}
+.author-link .arrow{transition:transform .18s ease;}
+.author-link:hover .arrow{transform:translate(2px,-2px);}
+
 @keyframes fadeIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
 .hero > *{animation:fadeIn .9s ease both;}
 .hero-meta{animation-delay:.05s;} .hero-title{animation-delay:.15s;} .hero-subtitle{animation-delay:.3s;} .hero-thesis{animation-delay:.45s;} .hero-actions{animation-delay:.6s;} .hero-logo{animation-delay:.5s;}
@@ -228,6 +324,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opa
     <a href="#manifesto">Manifesto</a>
     <a href="#levels">Levels</a>
     <a href="#modes">Modes</a>
+    <a href="#articles">Reading</a>
+    <a href="#author">Author</a>
     <a href="#join">Join</a>
     <a href="/" class="nav-lang">中文</a>
   </div>
@@ -533,6 +631,46 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opa
   </div>
 </section>
 
+<section class="section articles-section" id="articles">
+  <div class="container">
+    <div class="section-eyebrow">Reading List</div>
+    <h2 class="section-title">Articles to <em>Share</em></h2>
+    <p class="section-lead">Want to go deeper into R2K? Here's a curated reading list — spec, narrative essays, and platform-specific re-tellings. Cite freely, share widely, push back hard.</p>
+
+    <div class="articles-grid" id="articles-grid"></div>
+
+    <div class="articles-pager">
+      <button class="pager-btn" id="articles-prev" type="button" aria-label="Previous page">‹ Prev</button>
+      <span class="page-indicator" id="articles-indicator">Page 1 of 1</span>
+      <button class="pager-btn" id="articles-next" type="button" aria-label="Next page">Next ›</button>
+    </div>
+  </div>
+</section>
+
+<section class="section author-section" id="author">
+  <div class="container">
+    <div class="section-eyebrow">Author</div>
+    <h2 class="section-title">Written <em>By</em></h2>
+
+    <div class="author-grid">
+      <div>
+        <div class="author-card-name">Ted <em>Enjtorian</em></div>
+        <div class="author-role">R2K Framework Observer · Primary Author</div>
+        <div class="author-links">
+          <a class="author-link" href="https://tw.linkedin.com/in/enjtorian" target="_blank" rel="noopener noreferrer">LinkedIn <span class="arrow">↗</span></a>
+          <a class="author-link" href="https://github.com/enjtorian" target="_blank" rel="noopener noreferrer">GitHub <span class="arrow">↗</span></a>
+        </div>
+      </div>
+
+      <div class="author-bio">
+        <p>A software systems architect with 20+ years of experience. Watched CI/CD, containers, SBOM, OpenAPI, and observability each mature into their own standards over the past decade — but one thing was never formalized: <em>"What changed in this release, and what does it mean?"</em></p>
+        <p>R2K's design intent is not to invent new tools, but to <strong>name a semantic layer that already exists implicitly in every production system</strong> — integrating existing standards (OCI, CycloneDX, OpenAPI, Atlas …) and cleanly separating <em>facts</em> (L1+L2) from <em>intelligence</em> (L3+L4).</p>
+        <p>R2K is an open standard initiative — community contributions are welcomed and acknowledged. Full contributor list, contribution areas, and citation format: <a href="https://github.com/enjtorian/release-as-knowledge/blob/main/AUTHORS.md" target="_blank" rel="noopener">AUTHORS.md ↗</a>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="section" id="join" style="background:var(--paper-deep);border-top:1px solid var(--rule);">
   <div class="container">
     <div class="section-eyebrow">Get Involved</div>
@@ -603,6 +741,71 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opa
     if (window.scrollY > 20) nav.classList.add('scrolled');
     else nav.classList.remove('scrolled');
   });
+
+  // ===== ARTICLES · Reading List (English site lists English resources only) =====
+  const ARTICLES = [
+    {
+      source: 'GitHub Pages · MkDocs',
+      title: 'R2K v1 · Release-as-Knowledge',
+      blurb: 'Official spec site — manifesto, quickstart, glossary, FAQ. The right link to share when someone asks "what exactly is R2K?".',
+      tag: 'Spec',
+      lang: 'en',
+      url: 'https://enjtorian.github.io/release-as-knowledge/',
+    },
+    {
+      source: 'dev.to',
+      title: '[Release-as-Knowledge-01] The Support Engineer\'s 30 Minutes',
+      blurb: 'Long-form essay on dev.to · opens the R2K thesis from a single afternoon support call. The most shareable entry point for English-speaking engineers.',
+      tag: 'Series · Day 01',
+      lang: 'en',
+      url: 'https://dev.to/enjtorian/release-as-knowledge-01-the-support-engineers-30-minutes-4if2',
+    },
+  ];
+
+  const ARTICLES_PAGE_SIZE = 3;
+  let articlesPage = 0;
+
+  function renderArticles() {
+    const grid = document.getElementById('articles-grid');
+    const indicator = document.getElementById('articles-indicator');
+    const prevBtn = document.getElementById('articles-prev');
+    const nextBtn = document.getElementById('articles-next');
+    if (!grid || !indicator || !prevBtn || !nextBtn) return;
+
+    const totalPages = Math.max(1, Math.ceil(ARTICLES.length / ARTICLES_PAGE_SIZE));
+    if (articlesPage >= totalPages) articlesPage = totalPages - 1;
+    if (articlesPage < 0) articlesPage = 0;
+
+    const start = articlesPage * ARTICLES_PAGE_SIZE;
+    const slice = ARTICLES.slice(start, start + ARTICLES_PAGE_SIZE);
+
+    grid.innerHTML = slice.map(a => `
+      <a class="article-card" href="${a.url}" target="_blank" rel="noopener noreferrer">
+        <div class="article-source">${a.source}</div>
+        <h3 class="article-title">${a.title}</h3>
+        <p class="article-blurb">${a.blurb}</p>
+        <div class="article-meta">
+          <span>${a.lang.toUpperCase()} · ${a.tag}</span>
+          <span class="article-arrow">↗</span>
+        </div>
+      </a>
+    `).join('');
+
+    indicator.textContent = `Page ${articlesPage + 1} of ${totalPages}`;
+    prevBtn.disabled = articlesPage === 0;
+    nextBtn.disabled = articlesPage >= totalPages - 1;
+
+    const pager = document.querySelector('.articles-pager');
+    if (pager) pager.style.display = totalPages > 1 ? '' : 'none';
+  }
+
+  document.getElementById('articles-prev')?.addEventListener('click', () => {
+    articlesPage -= 1; renderArticles();
+  });
+  document.getElementById('articles-next')?.addEventListener('click', () => {
+    articlesPage += 1; renderArticles();
+  });
+  renderArticles();
 </script>
 </body>
 </html>

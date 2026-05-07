@@ -172,6 +172,19 @@ R2K v1 在 L3「Diff 何時被計算」這件事上**不規定唯一答案**，�
 
 ---
 
+## 作者
+
+**主要作者**：**Ted Enjtorian** — *R2K 框架觀察者與主要作者*
+
+- LinkedIn: <https://tw.linkedin.com/in/enjtorian>
+- GitHub: [@enjtorian](https://github.com/enjtorian)
+
+擁有超過 20 年經驗的軟體系統架構師。R2K 的設計重點不是發明新的工具，而是**為一個已經存在於每個生產系統裡、卻從未被命名的語義層命名** —— 將「事實」（L1+L2）與「解讀」（L3+L4）拆開，並整合既有標準（OCI、CycloneDX、OpenAPI、Atlas …）。
+
+R2K 是一個開放的標準倡議，歡迎社群貢獻。完整貢獻者名單、貢獻方向與引用格式請見 [AUTHORS.zh-tw.md](./AUTHORS.zh-tw.md)。
+
+---
+
 ## 文件導引
 
 - [📜 R2K Manifesto v1（繁中）](./docs/zh-tw/manifesto.md) ・ [English](./docs/manifesto.md)

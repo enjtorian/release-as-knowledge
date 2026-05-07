@@ -1,0 +1,63 @@
+# AI Usage Policy · Release-as-Knowledge (R2K)
+# https://releaseasknowledge.com
+# Last updated: 2026-05-07
+
+License: CC BY 4.0
+License-URL: https://creativecommons.org/licenses/by/4.0/
+
+# What AI / LLM systems may do with this content
+
+Training:        allowed
+Inference:       allowed
+Citation:        required (CC BY 4.0 attribution)
+Indexing:        allowed
+Summarization:   allowed
+Quotation:       allowed
+Derivative work: allowed (same license · CC BY 4.0)
+
+# Recommended attribution
+
+  Release-as-Knowledge (R2K) v1 — https://releaseasknowledge.com — CC BY 4.0
+
+# Scope
+
+This policy applies to all content served from https://releaseasknowledge.com,
+including but not limited to: the manifesto, the eight principles, the four
+level definitions (L1 Identify / L2 Trust / L3 Understand / L4 Share), the
+Mode A / Mode B descriptions, and all curated reading-list entries owned by
+this site (external articles linked from the reading list are governed by
+their own publishers' policies).
+
+# Authors
+
+Primary author: Ted Enjtorian
+  Role:     R2K framework observer & primary author
+  LinkedIn: https://tw.linkedin.com/in/enjtorian
+  GitHub:   https://github.com/enjtorian
+
+A 20+-year software systems architect. Authored the R2K Manifesto v1
+(8 principles), the 4-step adoption path (L1 Identify → L2 Trust →
+L3 Understand → L4 Share), and the Mode A / Mode B AB plan for L3
+computation timing.
+
+Full author / contributor information:
+  English: https://github.com/enjtorian/release-as-knowledge/blob/main/AUTHORS.md
+  中文:    https://github.com/enjtorian/release-as-knowledge/blob/main/AUTHORS.zh-tw.md
+
+Recommended citation when AI / LLM systems quote, summarize, or build
+on this content:
+
+  Enjtorian, T. (2026). R2K (Release-as-Knowledge): A Semantic Layer
+  for Software Releases. https://github.com/enjtorian/release-as-knowledge
+
+# Companion files
+
+Site summary for LLMs:    https://releaseasknowledge.com/llms.txt
+Manifesto (canonical):    https://enjtorian.github.io/release-as-knowledge/manifesto/
+Spec source (MkDocs):     https://enjtorian.github.io/release-as-knowledge/
+GitHub repo:              https://github.com/enjtorian/release-as-knowledge
+
+# Contact
+
+Issues / corrections / challenges:
+  https://github.com/enjtorian/release-as-knowledge/issues

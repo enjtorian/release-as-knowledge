@@ -1,0 +1,233 @@
+# Release-as-Knowledge (R2K)
+
+> A thesis, manifesto, and incremental adoption path for turning every software release from a binary handoff into a structured, machine-readable knowledge transfer. v1 · CC BY 4.0.
+
+R2K is not a product, a tool, or a vendor — it is a thesis with eight principles describing how software releases *should* work but rarely do. It defines four adoption levels (L1 Identify → L2 Trust → L3 Understand → L4 Share) and two computation modes (A: pre-computed in CI / B: computed on demand) so the same spec serves both air-gap ISVs and SaaS vendors.
+
+The framework operates on OCI images: store *facts* (LABELs, snapshots) in the image, derive *intelligence* (Change Manifest) from those facts. The same separation git applies to source code and SBOM applies to component lists.
+
+This site (`releaseasknowledge.com`) is the manifesto landing page. The full normative spec lives at the MkDocs site below.
+
+## Spec (canonical)
+
+- [R2K v1 Spec (English)](https://enjtorian.github.io/release-as-knowledge/): Manifesto, quickstart, glossary, FAQ. The right link to cite when explaining R2K.
+- [R2K v1 規格文件 (中文)](https://enjtorian.github.io/release-as-knowledge/zh-tw/): Same spec in Traditional Chinese — Taiwan / HK / SG audience.
+- [The R2K Manifesto v1 (canonical, English)](https://enjtorian.github.io/release-as-knowledge/manifesto/): The full manifesto rendered. The verbatim text is also embedded below for offline / LLM consumption.
+
+## Manifesto landing pages
+
+- [Manifesto · English](https://releaseasknowledge.com/en/): Hero, 8 principles, 4 levels, Mode A/B trade-off table, distinction-vs.
+- [Manifesto · 中文](https://releaseasknowledge.com/): Same content in Traditional Chinese.
+
+## Articles (curated reading list)
+
+- [The Support Engineer's 30 Minutes (dev.to)](https://dev.to/enjtorian/release-as-knowledge-01-the-support-engineers-30-minutes-4if2): English long-form essay opening R2K from one afternoon support call. Day 01 of the series.
+- [支援工程師的 30 分鐘 (iThome 鐵人賽)](https://ithelp.ithome.com.tw/articles/10399897): Traditional Chinese counterpart of the same Day 01 essay; part of an iThome series.
+
+## Core concepts (one line each)
+
+- **L1 · Identify**: 4 R2K LABELs + 5 OCI LABELs on every production image.
+- **L2 · Trust**: `/r2k/` snapshots — OpenAPI, DB schema, config, SBOM, runtime — listed by `/r2k/index.yaml` with sha256.
+- **L3 · Understand**: Cross-asset `change.yaml` derived from L1 + L2 via diff plugins (one per asset class).
+- **L4 · Share**: OCI 1.1 Referrers / R2K artifact crosses org boundaries; clients can read offline; emits an R2K badge.
+- **Mode A**: Change Manifest pre-computed in CI, attached to image (air-gap friendly, from→to is locked).
+- **Mode B**: Change Manifest computed on demand by a Diff Engine service (any from→to, requires connectivity).
+
+## Authors
+
+**Primary author**: **Ted Enjtorian** — *R2K framework observer & primary author*
+
+- LinkedIn: <https://tw.linkedin.com/in/enjtorian>
+- GitHub: <https://github.com/enjtorian>
+
+A 20+-year software systems architect. R2K's design intent is not to invent new tools, but to *name a semantic layer that already exists implicitly in every production system* — separating facts (L1+L2) from intelligence (L3+L4) and integrating existing standards (OCI, CycloneDX, OpenAPI, Atlas migration plans …).
+
+R2K is an open standard initiative — community contributions are welcomed and acknowledged. Full contributor list, contribution areas, and citation format:
+
+- [AUTHORS.md (English)](https://github.com/enjtorian/release-as-knowledge/blob/main/AUTHORS.md)
+- [AUTHORS.zh-tw.md (繁體中文)](https://github.com/enjtorian/release-as-knowledge/blob/main/AUTHORS.zh-tw.md)
+- [SIGNATURES.md (public endorsements)](https://github.com/enjtorian/release-as-knowledge/blob/main/SIGNATURES.md)
+
+Recommended citation:
+
+```
+Enjtorian, T. (2026). R2K (Release-as-Knowledge): A Semantic Layer
+for Software Releases. https://github.com/enjtorian/release-as-knowledge
+```
+
+## Source
+
+- [GitHub repository](https://github.com/enjtorian/release-as-knowledge): Spec source (MkDocs), samples, validators, CLI, claude-skills.
+- [SIGNATURES.md](https://github.com/enjtorian/release-as-knowledge/blob/main/SIGNATURES.md): Public endorsements of the manifesto.
+- [Issues](https://github.com/enjtorian/release-as-knowledge/issues): Vendor extensions, plugin proposals, challenges to the thesis.
+
+## License & attribution
+
+Content is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Cite freely, modify openly. Recommended attribution:
+
+> Release-as-Knowledge (R2K) v1 — https://releaseasknowledge.com — CC BY 4.0
+
+---
+
+# The R2K Manifesto v1 (full text)
+
+> The verbatim text below is the canonical Manifesto v1 (CC BY 4.0). Source:
+> https://enjtorian.github.io/release-as-knowledge/manifesto/
+> Repo source: https://github.com/enjtorian/release-as-knowledge/blob/main/docs/manifesto.md
+
+## We believe
+
+A software release should be **a knowledge transfer, not just a binary handoff**.
+
+When a team builds a release, it accumulates a great deal of implicit knowledge:
+
+- Which APIs changed, which are breaking
+- Which DB migrations are dangerous and need a maintenance window
+- Which configs are now required, which are deprecated
+- Which breaking changes affect which customers
+
+**This knowledge does not currently ship with the image.** It stays in PR descriptions, Slack threads, and engineers' memory.
+
+Downstream consumers — support engineers, customer DevOps teams, auditors, compliance teams — must reconstruct it from these fragmented traces. **We believe this can and should change.**
+
+## 8 Principles
+
+### 1. Artifact carries facts, not intelligence
+
+The OCI image should store L1 (LABELs) + L2 (snapshots: API spec, DB schema, config) — these are **facts**.
+L3 (Change Manifest) is **intelligence** — computed from facts, not baked into the image.
+
+This mirrors two mature designs:
+
+- **git**: commits store snapshots, diffs are computed
+- **SBOM**: stores component lists, vulnerability scans are computed
+
+**R2K does to OCI images what git does to source code**: facts live in the artifact, intelligence is derived.
+
+### 2. Knowledge ships with the artifact
+
+Knowledge cannot live only in PR descriptions. It must travel with the image, be machine-indexable, and be consumable by non-developers.
+
+### 3. Implicit becomes explicit
+
+What is trivial to engineers is a landmine to customers. R2K forces this knowledge to be structured and machine-readable.
+
+### 4. Standards over invention
+
+OCI, CycloneDX, OpenAPI, Atlas migration plans — industry standards that have been running for years. R2K's schema integrates these existing standards rather than inventing new formats.
+
+### 5. Designed for non-developers
+
+R2K serves support engineers, customer DevOps, auditors, and compliance teams — not the developers themselves.
+
+### 6. Layered by query frequency
+
+90% high-frequency lightweight queries use LABELs (~50ms). 10% low-frequency heavy queries use metadata layers (~300ms). 1% deep-detail queries use the full Change Manifest.
+
+### 7. Compatible with existing pipelines
+
+No CI/CD rewrite, no registry change, no framework swap required. Start with 5 lines of Dockerfile changes at Level 1. **Adopt incrementally.**
+
+### 8. Manifests are the lingua franca
+
+Structured yaml/json bridges tools, organizations, and human/machine readability.
+
+## 4-Step Adoption Path · 4 Levels
+
+R2K provides an **incremental adoption** path:
+
+| Step | Level | Name | Verb | Nature | Cost | Independently declarable |
+|---|---|---|---|---|---|---|
+| 1 | **L1** | Identify | LABEL | facts | 1-2 weeks | ✓ |
+| 2 | **L2** | Trust | Snapshot | facts | 2-3 weeks | ✓ |
+| 3 | **L3** | Understand | Diff | **intelligence** | 6-8 weeks | ✓ |
+| 4 | **L4** | Share | Insight / Distribute | social | 4 weeks | ✓ |
+
+- L1+L2 are the **fact layer** — stored in the image
+- L3 is the **computation layer** — derived from L1+L2
+- L4 is the **social layer** — sharing insight across organizations
+
+Like SLSA's tier system, **each level can be independently declared.**
+
+### One-line summary
+
+> **L1 = Identify · L2 = Trust · L3 = Understand · L4 = Share**
+
+### What each step needs
+
+- **Step 1 (L1)**: OCI labels — 5 lines of Dockerfile to start.
+- **Step 2 (L2)**: **Many automated collectors** (OpenAPI / DB schema / config / SBOM, each with its own collector). R2K specifies placement and schema, not the collectors themselves.
+- **Step 3 (L3)**: **Many diff plugins**, because diff rules differ per asset. R2K provides the plugin SPI; outputs all share one `change.yaml` schema.
+- **Step 4 (L3+/L4)**: Cross-asset insight. R2K provides a pluggable insight framework (LLM, rule engine, policy-as-code).
+
+## Two modes for L3 computation · the v1 AB plan
+
+L3 is derived — but **when** it gets derived has two options:
+
+### Mode A · Pre-computed
+
+- Change Manifest computed in CI and attached to the image
+- No Diff Engine service required on the customer side
+- ✅ Best for: **air-gapped on-prem ISVs**
+
+### Mode B · On-demand
+
+- CI attaches only L1+L2 snapshots
+- Diff Engine computes the manifest at query time
+- Any from→to combination is queryable
+- ✅ Best for: **SaaS / connected enterprise / open-source tools**
+
+### Both modes (recommended)
+
+- The image carries Mode A's default-pair manifest
+- L2 snapshots remain complete, allowing Mode B to recompute any combination
+- Both customer types benefit
+
+### Trade-off matrix
+
+| Dimension | Mode A | Mode B | Both |
+|---|---|---|---|
+| Air-gap friendly | ✅ Perfect | ❌ Service required | ✅ |
+| Arbitrary from→to | ❌ Locked | ✅ Full | ✅ |
+| Auto-benefit from rule updates | ❌ Needs rebuild | ✅ Automatic | △ Partial |
+| CI integration complexity | ✅ Simple | ✅ Simple | △ Medium |
+| Customer-side complexity | ✅ Simple | △ Connection required | △ Path-dependent |
+| Best for | ISV / on-prem | SaaS | Hybrid |
+
+R2K **as a framework does not prescribe which** — but **Principle 1 (facts vs intelligence) makes both modes legitimate**.
+
+The choice depends on whether your customer side can connect to your service.
+
+## What R2K is NOT
+
+- **R2K is not SBOM** (SBOM is a subset of L2)
+- **R2K is not SLSA** (SLSA solves build security; R2K solves change communication)
+- **R2K is not release notes** (release notes are a derived byproduct; R2K is the structured primary product)
+- **R2K is not a tool** (R2K is a framework + naming + adoption standard, not tied to any specific implementation)
+
+## 5 ways to join
+
+| | Way | Action |
+|---|---|---|
+| ① | **Sign** | Add your name to SIGNATURES.md |
+| ② | **Adopt** | Start with Step 1 (L1), display the R2K Level 1 badge |
+| ③ | **Share** | Blog posts, conference talks, real-world cases |
+| ④ | **Extend** | Propose vendor-specific extensions (`x-yourco-*`) or diff plugins |
+| ⑤ | **Challenge** | Point out where we're wrong — we'll publicly update |
+
+The fifth way matters — Principle 1 itself was added because someone challenged the earlier draft.
+**A manifesto is something that gets refined by being challenged.**
+
+## License & Reproduction
+
+This Manifesto is [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+Share, adapt, use commercially — only requirement is attribution.
+
+---
+
+> **The past decade pipelined our code.**
+> **The next decade will pipeline what surrounds it.**
+>
+> That's what R2K v1 aims to do.
+
+*Release-as-Knowledge Manifesto v1 · 2026-05 · CC BY 4.0*
