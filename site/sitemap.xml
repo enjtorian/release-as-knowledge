@@ -17,4 +17,16 @@
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://releaseasknowledge.com/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://releaseasknowledge.com/en/"/>
   </url>
+  <url>
+    <loc>https://releaseasknowledge.com/llms.txt</loc>
+    <lastmod>2026-05-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://releaseasknowledge.com/ai.txt</loc>
+    <lastmod>2026-05-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
 </urlset>
