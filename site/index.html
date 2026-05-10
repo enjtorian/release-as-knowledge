@@ -71,7 +71,7 @@
       "name": "延伸閱讀 · R2K Reading List (zh-Hant)",
       "inLanguage": "zh-Hant",
       "itemListOrder": "https://schema.org/ItemListOrderAscending",
-      "numberOfItems": 2,
+      "numberOfItems": 3,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -84,6 +84,12 @@
           "position": 2,
           "url": "https://ithelp.ithome.com.tw/articles/10399897",
           "name": "[Release-as-Knowledge-01] 支援工程師的 30 分鐘"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "url": "https://ithelp.ithome.com.tw/articles/10399916",
+          "name": "[Release-as-Knowledge-02] 從 LABEL 開始 · R2K Level 1 Identify"
         }
       ]
     }
@@ -165,7 +171,39 @@ body::before {
 .nav-links a { color: var(--ink-soft); text-decoration: none; transition: color 0.15s; }
 .nav-links a:hover { color: var(--accent); }
 .nav-lang { color: var(--ink-faint); }
-@media (max-width: 720px) { .nav-links { display: none; } }
+
+/* Mobile hamburger */
+.nav-toggle {
+  display: none; background: transparent; border: 0; padding: 0;
+  width: 36px; height: 36px; cursor: pointer;
+  flex-direction: column; justify-content: space-around; align-items: stretch;
+}
+.nav-toggle-bar {
+  display: block; width: 100%; height: 2px; background: var(--ink);
+  transition: transform 0.2s ease, opacity 0.2s ease; transform-origin: center;
+}
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(2) { opacity: 0; }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+@media (max-width: 720px) {
+  .nav-toggle { display: flex; }
+  .nav-links {
+    display: none; position: absolute; top: 100%; left: 0; right: 0;
+    flex-direction: column; gap: 0;
+    background: rgba(248, 245, 240, 0.97);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    padding: 0.5rem var(--gutter) 1.25rem;
+    border-bottom: 1px solid var(--rule);
+    max-height: calc(100vh - 60px); overflow-y: auto;
+  }
+  .nav-links.open { display: flex; }
+  .nav-links a {
+    padding: 0.85rem 0; font-size: 0.78rem;
+    border-bottom: 1px solid var(--rule-faint);
+  }
+  .nav-links a:last-of-type { border-bottom: 0; }
+}
 
 /* ============ CONTAINERS ============ */
 .container {
@@ -178,7 +216,7 @@ body::before {
 
 /* ============ HERO ============ */
 .hero {
-  min-height: 100vh; padding: 8rem 0 5rem;
+  min-height: 100vh; min-height: 100svh; padding: 8rem 0 5rem;
   display: flex; align-items: center; position: relative;
 }
 .hero-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 5rem; align-items: center; }
@@ -282,6 +320,10 @@ body::before {
   position: absolute; top: 4rem; left: var(--gutter);
   pointer-events: none; font-weight: 600;
 }
+@media (max-width: 720px) {
+  .thesis { padding: 5rem 0; }
+  .thesis-mark { font-size: 4.5rem; top: 1.75rem; opacity: 0.12; }
+}
 
 /* ============ STEPS (4-Step path) ============ */
 .steps-section { background: var(--paper); border-top: 1px solid var(--rule); }
@@ -337,6 +379,16 @@ body::before {
 }
 .level:hover { background: rgba(255,255,255,0.08); transform: translateY(-3px); }
 .level::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--lc); }
+a.level { text-decoration: none; color: inherit; cursor: pointer; display: block; }
+a.level:hover { border-color: rgba(255,255,255,0.28); }
+.level-go {
+  position: absolute; top: 0.85rem; right: 1rem;
+  font-family: var(--mono); font-size: 0.95rem;
+  color: var(--lc); opacity: 0.55;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  pointer-events: none;
+}
+a.level:hover .level-go { opacity: 1; transform: translate(2px, -2px); }
 .level[data-level="1"] { --lc: var(--level-1); }
 .level[data-level="2"] { --lc: var(--level-2); }
 .level[data-level="3"] { --lc: var(--level-3); }
@@ -423,7 +475,9 @@ body::before {
 
 .modes-tradeoff-wrap { margin: 4rem 0 2rem; }
 .modes-tradeoff-title { font-family: var(--serif-display); font-size: 1.4rem; font-weight: 500; margin-bottom: 1.5rem; color: var(--ink); }
+.modes-tradeoff-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 .modes-tradeoff { width: 100%; border-collapse: collapse; }
+@media (max-width: 600px) { .modes-tradeoff { min-width: 480px; } }
 .modes-tradeoff th { font-family: var(--mono); font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; text-align: left; padding: 1rem 0.75rem; border-bottom: 2px solid var(--ink); color: var(--ink); }
 .modes-tradeoff td { padding: 0.85rem 0.75rem; border-bottom: 1px solid var(--rule-faint); color: var(--ink); font-size: 0.95rem; }
 .modes-tradeoff td.ok { color: #1E8449; font-weight: 500; }
@@ -584,17 +638,23 @@ body::before {
 <!-- ===== NAV ===== -->
 <nav class="nav" id="nav">
   <a href="#top" class="nav-mark">R<span>2</span>K · MANIFESTO</a>
-  <div class="nav-links">
+  <div class="nav-links" id="nav-drawer">
     <a href="#thesis">論點</a>
     <a href="#steps">階段</a>
     <a href="#manifesto">宣言</a>
     <a href="#levels">等級</a>
     <a href="#modes">模式</a>
+    <a href="/implement/l1/">實作</a>
     <a href="#articles">延伸閱讀</a>
     <a href="#author">作者</a>
     <a href="#join">加入</a>
     <a href="/en/" class="nav-lang">EN</a>
   </div>
+  <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-drawer" aria-label="開啟選單">
+    <span class="nav-toggle-bar"></span>
+    <span class="nav-toggle-bar"></span>
+    <span class="nav-toggle-bar"></span>
+  </button>
 </nav>
 
 <!-- ===== HERO ===== -->
@@ -797,7 +857,8 @@ body::before {
 
     <div class="levels-grid">
 
-      <article class="level" data-level="1">
+      <a class="level" data-level="1" href="/implement/l1/" aria-label="Level 1 Identify · 跳到實作頁">
+        <span class="level-go" aria-hidden="true">↗</span>
         <div class="level-num">L1 · IDENTIFY</div>
         <h3 class="level-title">身份層 · <em>Identify</em></h3>
         <p class="level-mech">Docker LABEL · build-arg</p>
@@ -808,7 +869,7 @@ body::before {
           <div class="level-stat"><span class="level-stat-label">Cost</span><span class="level-stat-value">1–2 週</span></div>
           <div class="level-stat"><span class="level-stat-label">Win</span><span class="level-stat-value">90% 查詢秒回</span></div>
         </div>
-      </article>
+      </a>
 
       <article class="level" data-level="2">
         <div class="level-num">L2 · TRUST</div>
@@ -914,21 +975,23 @@ body::before {
 
     <div class="modes-tradeoff-wrap">
       <h3 class="modes-tradeoff-title">取捨對照</h3>
-      <table class="modes-tradeoff">
-        <thead>
-          <tr>
-            <th>維度</th><th>Mode A</th><th>Mode B</th><th>雙模式</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>Air-gap 友好</td><td class="ok">✓ 完美</td><td class="bad">✗ 需服務</td><td class="ok">✓</td></tr>
-          <tr><td>任意 from→to 查詢</td><td class="bad">✗ 預設綁死</td><td class="ok">✓ 完整</td><td class="ok">✓</td></tr>
-          <tr><td>Diff 規則升級自動受惠</td><td class="bad">✗ 需 rebuild</td><td class="ok">✓ 自動</td><td class="meh">△ 部分</td></tr>
-          <tr><td>CI 整合複雜度</td><td class="ok">✓ 簡單</td><td class="ok">✓ 簡單</td><td class="meh">△ 中等</td></tr>
-          <tr><td>客戶端複雜度</td><td class="ok">✓ 簡單</td><td class="meh">△ 需連線</td><td class="meh">△ 看 path</td></tr>
-          <tr><td>適用 vendor 類型</td><td>ISV / on-prem</td><td>SaaS</td><td>中型混合</td></tr>
-        </tbody>
-      </table>
+      <div class="modes-tradeoff-scroll">
+        <table class="modes-tradeoff">
+          <thead>
+            <tr>
+              <th>維度</th><th>Mode A</th><th>Mode B</th><th>雙模式</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Air-gap 友好</td><td class="ok">✓ 完美</td><td class="bad">✗ 需服務</td><td class="ok">✓</td></tr>
+            <tr><td>任意 from→to 查詢</td><td class="bad">✗ 預設綁死</td><td class="ok">✓ 完整</td><td class="ok">✓</td></tr>
+            <tr><td>Diff 規則升級自動受惠</td><td class="bad">✗ 需 rebuild</td><td class="ok">✓ 自動</td><td class="meh">△ 部分</td></tr>
+            <tr><td>CI 整合複雜度</td><td class="ok">✓ 簡單</td><td class="ok">✓ 簡單</td><td class="meh">△ 中等</td></tr>
+            <tr><td>客戶端複雜度</td><td class="ok">✓ 簡單</td><td class="meh">△ 需連線</td><td class="meh">△ 看 path</td></tr>
+            <tr><td>適用 vendor 類型</td><td>ISV / on-prem</td><td>SaaS</td><td>中型混合</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <p class="modes-conclusion">
@@ -1018,13 +1081,13 @@ body::before {
         <div class="author-links">
           <a class="author-link" href="https://tw.linkedin.com/in/enjtorian" target="_blank" rel="noopener noreferrer">LinkedIn <span class="arrow">↗</span></a>
           <a class="author-link" href="https://github.com/enjtorian" target="_blank" rel="noopener noreferrer">GitHub <span class="arrow">↗</span></a>
+          <a class="author-link" href="https://github.com/enjtorian/release-as-knowledge/blob/main/AUTHORS.zh-tw.md" target="_blank" rel="noopener noreferrer">AUTHORS <span class="arrow">↗</span></a>
         </div>
       </div>
 
       <div class="author-bio">
         <p>擁有超過 20 年經驗的軟體系統架構師。在過去十年見證了 CI/CD、容器、SBOM、OpenAPI、Observability 各自走向成熟,但有一件事始終沒被標準化:<em>「這個 release 改了什麼?意味著什麼?」</em></p>
         <p>R2K 的設計重點不是發明新的工具,而是<strong>為一個已經存在於每個生產系統裡、卻從未被命名的語義層命名</strong> —— 整合既有標準(OCI、CycloneDX、OpenAPI、Atlas …),把<em>事實</em>(L1+L2)與<em>解讀</em>(L3+L4)拆開。</p>
-        <p>R2K 是一個開放的標準倡議,歡迎社群貢獻。完整貢獻者名單、貢獻方向與引用格式請見 <a href="https://github.com/enjtorian/release-as-knowledge/blob/main/AUTHORS.zh-tw.md" target="_blank" rel="noopener">AUTHORS.zh-tw.md ↗</a>。</p>
       </div>
     </div>
 
@@ -1122,6 +1185,20 @@ body::before {
     else nav.classList.remove('scrolled');
   });
 
+  // ===== Mobile nav drawer =====
+  const navToggle = document.getElementById('nav-toggle');
+  const navDrawer = document.getElementById('nav-drawer');
+  function closeDrawer() {
+    navDrawer?.classList.remove('open');
+    navToggle?.setAttribute('aria-expanded', 'false');
+  }
+  navToggle?.addEventListener('click', () => {
+    const open = navDrawer.classList.toggle('open');
+    navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  navDrawer?.querySelectorAll('a').forEach(a => a.addEventListener('click', closeDrawer));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
+
   // ===== ARTICLES · 文章分享 Hub(中文 site 只列中文資源) =====
   const ARTICLES = [
     {
@@ -1139,6 +1216,14 @@ body::before {
       tag: 'Series · Day 01',
       lang: 'zh-Hant',
       url: 'https://ithelp.ithome.com.tw/articles/10399897',
+    },
+    {
+      source: 'iT 邦幫忙',
+      title: '[Release-as-Knowledge-02] 從 LABEL 開始 · R2K Level 1 Identify',
+      blurb: 'R2K Level 1(Identify · 身份層)的入門機制 · 5 行 Dockerfile 改變支援團隊的世界 · OCI 標準 + dev.releaseasknowledge.* 兩組 LABEL。',
+      tag: 'Series · Day 02',
+      lang: 'zh-Hant',
+      url: 'https://ithelp.ithome.com.tw/articles/10399916',
     },
   ];
 

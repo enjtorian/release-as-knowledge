@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>R2K Level 1 · Identify · 實作 — Dockerfile + Build Command</title>
+<meta name="description" content="R2K Level 1（Identify）完整實作範例：5 行 Dockerfile + CI build command + scanner 驗證。1-2 工程週可達成的身份層。">
+<meta name="version" content="1.0">
+
+<meta property="og:title" content="R2K Level 1 · Identify · 實作">
+<meta property="og:description" content="從一個 Dockerfile + 一條 build 指令開始 — 把 image 標上身份。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://releaseasknowledge.com/implement/l1/">
+<meta property="og:image" content="https://releaseasknowledge.com/og-manifesto.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="canonical" href="https://releaseasknowledge.com/implement/l1/">
+<link rel="alternate" hreflang="zh-Hant" href="https://releaseasknowledge.com/implement/l1/">
+<link rel="alternate" hreflang="en" href="https://releaseasknowledge.com/en/implement/l1/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Noto+Serif+TC:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --paper: #F8F5F0;
+  --paper-deep: #F0EBE2;
+  --ink: #1A1A1A;
+  --ink-soft: #4A4A4A;
+  --ink-faint: #8A8580;
+  --rule: #D8D2C7;
+  --rule-faint: #E8E3D8;
+  --accent: #C0392B;
+  --accent-soft: #FCEAE6;
+  --level-1: #B7791F;
+  --level-2: #2874A6;
+  --level-3: #6C3483;
+  --level-4: #1E8449;
+
+  --serif-display: 'Newsreader', 'Noto Serif TC', Georgia, serif;
+  --serif-body: 'Newsreader', 'Noto Serif TC', Georgia, serif;
+  --mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+
+  --col-narrow: 760px;
+  --col-wide: 1100px;
+  --gutter: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--paper); color: var(--ink);
+  font-family: var(--serif-body); font-size: 18px; line-height: 1.7;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+}
+body::before {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 1;
+  opacity: 0.4; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ============ NAV ============ */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 1.25rem var(--gutter);
+  display: flex; justify-content: space-between; align-items: center;
+  background: rgba(248, 245, 240, 0.85);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+.nav.scrolled { border-bottom-color: var(--rule); }
+.nav-mark {
+  font-family: var(--mono); font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink);
+  text-decoration: none;
+}
+.nav-mark span { color: var(--accent); }
+.nav-links {
+  display: flex; gap: 1.75rem;
+  font-family: var(--mono); font-size: 0.7rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+}
+.nav-links a { color: var(--ink-soft); text-decoration: none; transition: color 0.15s; }
+.nav-links a:hover { color: var(--accent); }
+.nav-links a[aria-current="page"] { color: var(--accent); }
+.nav-lang { color: var(--ink-faint); }
+
+.nav-toggle {
+  display: none; background: transparent; border: 0; padding: 0;
+  width: 36px; height: 36px; cursor: pointer;
+  flex-direction: column; justify-content: space-around; align-items: stretch;
+}
+.nav-toggle-bar {
+  display: block; width: 100%; height: 2px; background: var(--ink);
+  transition: transform 0.2s ease, opacity 0.2s ease; transform-origin: center;
+}
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(2) { opacity: 0; }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+@media (max-width: 720px) {
+  .nav-toggle { display: flex; }
+  .nav-links {
+    display: none; position: absolute; top: 100%; left: 0; right: 0;
+    flex-direction: column; gap: 0;
+    background: rgba(248, 245, 240, 0.97);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    padding: 0.5rem var(--gutter) 1.25rem;
+    border-bottom: 1px solid var(--rule);
+    max-height: calc(100vh - 60px); overflow-y: auto;
+  }
+  .nav-links.open { display: flex; }
+  .nav-links a {
+    padding: 0.85rem 0; font-size: 0.78rem;
+    border-bottom: 1px solid var(--rule-faint);
+  }
+  .nav-links a:last-of-type { border-bottom: 0; }
+}
+
+/* ============ CONTAINERS ============ */
+.container {
+  max-width: var(--col-wide); margin: 0 auto; padding: 0 var(--gutter);
+  position: relative; z-index: 2;
+}
+.narrow { max-width: var(--col-narrow); }
+
+/* ============ HERO ============ */
+.impl-hero {
+  padding: 9rem 0 4rem; border-bottom: 1px solid var(--rule);
+  position: relative;
+}
+.crumb {
+  font-family: var(--mono); font-size: 0.72rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink-faint); margin-bottom: 2.5rem;
+}
+.crumb a { color: var(--ink-faint); text-decoration: none; transition: color 0.15s; }
+.crumb a:hover { color: var(--accent); }
+.crumb .sep { margin: 0 0.6rem; opacity: 0.5; }
+.impl-eyebrow {
+  font-family: var(--mono); font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--level-1);
+  margin-bottom: 1rem; display: flex; align-items: center; gap: 0.85rem;
+}
+.impl-eyebrow::before {
+  content: ''; display: block; width: 28px; height: 2px;
+  background: var(--level-1);
+}
+.impl-title {
+  font-family: var(--serif-display); font-weight: 500;
+  font-size: clamp(2.6rem, 5.5vw, 4.4rem);
+  line-height: 1.05; letter-spacing: -0.02em; color: var(--ink);
+  margin-bottom: 1rem;
+  font-variation-settings: "opsz" 72;
+}
+.impl-title em { font-style: italic; color: var(--accent); font-variation-settings: "opsz" 72; }
+.impl-subtitle {
+  font-size: 1.15rem; line-height: 1.6; color: var(--ink-soft);
+  font-style: italic; max-width: 32rem; margin-bottom: 2rem;
+}
+.impl-stats {
+  display: flex; flex-wrap: wrap; gap: 1.5rem 2.5rem;
+  font-family: var(--mono); font-size: 0.78rem;
+  letter-spacing: 0.05em; padding-top: 1.5rem;
+  border-top: 1px solid var(--rule);
+}
+.impl-stat-label {
+  display: inline-block; font-size: 0.68rem; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--ink-faint);
+  margin-right: 0.5rem;
+}
+.impl-stat-value { color: var(--ink); font-weight: 500; }
+
+/* ============ STEPS ============ */
+.impl-steps { counter-reset: step; list-style: none; }
+.impl-step {
+  counter-increment: step;
+  padding: 4rem 0; border-bottom: 1px solid var(--rule);
+  display: grid; grid-template-columns: 6rem 1fr; gap: 2.5rem;
+  align-items: baseline;
+}
+.impl-step::before {
+  content: counter(step, decimal-leading-zero);
+  font-family: var(--serif-display); font-weight: 400;
+  font-size: clamp(2.5rem, 5vw, 3.8rem); line-height: 1;
+  color: var(--ink-faint); letter-spacing: -0.04em;
+  font-variation-settings: "opsz" 72;
+  font-feature-settings: 'lnum';
+  grid-column: 1;
+}
+.impl-step > div { grid-column: 2; min-width: 0; }
+.impl-step h2 {
+  font-family: var(--serif-display); font-weight: 500;
+  font-size: clamp(1.5rem, 2.6vw, 1.95rem); line-height: 1.2;
+  letter-spacing: -0.01em; color: var(--ink); margin-bottom: 0.4rem;
+  font-variation-settings: "opsz" 72;
+}
+.impl-step h2 em { font-style: italic; color: var(--accent); }
+.impl-step .step-tag {
+  display: block; font-family: var(--mono); font-size: 0.72rem;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 1.5rem;
+}
+.impl-step p { color: var(--ink-soft); margin: 1rem 0; line-height: 1.7; max-width: 38rem; }
+.impl-step p strong { color: var(--ink); font-weight: 600; }
+.impl-step p em { color: var(--accent); font-style: italic; }
+.impl-step ul { margin: 1rem 0 1rem 1.25rem; color: var(--ink-soft); }
+.impl-step ul li { padding: 0.2rem 0; }
+
+@media (max-width: 720px) {
+  .impl-step { grid-template-columns: 1fr; gap: 0.75rem; padding: 3rem 0; }
+  .impl-step::before { font-size: 2.4rem; }
+}
+
+/* ============ CODE ============ */
+.code-label {
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--ink-faint);
+  margin: 1.75rem 0 0.5rem;
+}
+.code-label .file { color: var(--accent); font-weight: 600; }
+.code-label .lang { color: var(--ink-faint); }
+.code-block {
+  background: #1A1A1A; color: #F8F5F0;
+  padding: 1.5rem 1.75rem; margin: 0 0 0.5rem;
+  font-family: var(--mono); font-size: 0.82rem; line-height: 1.7;
+  overflow-x: auto; border-left: 3px solid var(--accent);
+  -webkit-overflow-scrolling: touch;
+}
+.code-block code { font-family: inherit; white-space: pre; display: block; }
+.code-block .c { color: #8A8580; font-style: italic; } /* comment */
+.code-block .k { color: #F0C896; }                     /* keyword (FROM, ARG, LABEL, RUN) */
+.code-block .s { color: #B8E8C0; }                     /* string */
+.code-block .v { color: #F8B89C; }                     /* variable / build-arg */
+.code-block .ns { color: #A8C8E8; }                    /* namespace prefix */
+.code-block .p { color: #C0392B; }                     /* prompt $ */
+.code-block .f { color: #F0C896; font-weight: 600; }   /* command name */
+
+@media (max-width: 720px) {
+  .code-block { font-size: 0.74rem; padding: 1.1rem 1.2rem; }
+}
+
+.output-block {
+  background: var(--paper-deep); border: 1px solid var(--rule);
+  border-left: 3px solid var(--ink-faint);
+  padding: 1.1rem 1.4rem; margin: 0.5rem 0 1rem;
+  font-family: var(--mono); font-size: 0.78rem;
+  line-height: 1.6; color: var(--ink); overflow-x: auto;
+}
+.output-block code { font-family: inherit; white-space: pre; display: block; }
+
+/* ============ CHECKLIST CALLOUT ============ */
+.checklist {
+  margin: 4rem 0;
+  background: var(--accent-soft); border-left: 4px solid var(--accent);
+  padding: 2.25rem 2.5rem;
+}
+.checklist-eyebrow {
+  font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem;
+}
+.checklist h3 {
+  font-family: var(--serif-display); font-weight: 500;
+  font-size: 1.5rem; line-height: 1.3; color: var(--ink);
+  margin-bottom: 1.25rem;
+  font-variation-settings: "opsz" 72;
+}
+.checklist ul { list-style: none; padding: 0; margin: 0 0 1rem; }
+.checklist li {
+  padding: 0.35rem 0 0.35rem 1.75rem; position: relative;
+  color: var(--ink); font-size: 1rem; line-height: 1.55;
+}
+.checklist li::before {
+  content: '✓'; position: absolute; left: 0; top: 0.35rem;
+  color: var(--accent); font-weight: 700;
+}
+.checklist p {
+  margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(192, 57, 43, 0.18);
+  color: var(--ink-soft); font-style: italic;
+}
+@media (max-width: 720px) { .checklist { padding: 1.5rem 1.5rem; } }
+
+/* ============ NEXT STEP ============ */
+.next-step {
+  padding: 5rem 0 4rem; border-top: 1px solid var(--rule);
+  background: var(--paper-deep);
+}
+.next-eyebrow {
+  font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--ink-faint); margin-bottom: 1rem;
+}
+.next-title {
+  font-family: var(--serif-display); font-weight: 500;
+  font-size: clamp(1.8rem, 3.2vw, 2.4rem); line-height: 1.2;
+  margin-bottom: 1rem; color: var(--ink);
+  font-variation-settings: "opsz" 72;
+}
+.next-title em { font-style: italic; color: var(--level-2); font-variation-settings: "opsz" 72; }
+.next-step p { color: var(--ink-soft); max-width: 40rem; margin-bottom: 1.5rem; }
+.next-step p em { color: var(--accent); font-style: italic; }
+.next-step .pending {
+  display: inline-block; padding: 0.45rem 0.9rem;
+  font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.15em;
+  text-transform: uppercase; background: var(--paper);
+  border: 1px solid var(--rule); color: var(--ink-faint);
+}
+
+/* ============ FOOTER ============ */
+.footer { padding: 4rem 0 3rem; background: var(--paper); border-top: 1px solid var(--rule); }
+.footer-bottom {
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+  font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em;
+  color: var(--ink-faint); text-transform: uppercase;
+}
+.footer-bottom a { color: var(--ink-faint); text-decoration: none; }
+.footer-bottom a:hover { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav class="nav" id="nav">
+  <a href="/" class="nav-mark">R<span>2</span>K · IMPLEMENT</a>
+  <div class="nav-links" id="nav-drawer">
+    <a href="/#thesis">論點</a>
+    <a href="/#levels">等級</a>
+    <a href="/implement/l1/" aria-current="page">L1 實作</a>
+    <a href="/#articles">延伸閱讀</a>
+    <a href="/#join">加入</a>
+    <a href="/" class="nav-lang">首頁</a>
+    <a href="/en/implement/l1/" class="nav-lang">EN</a>
+  </div>
+  <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-drawer" aria-label="開啟選單">
+    <span class="nav-toggle-bar"></span>
+    <span class="nav-toggle-bar"></span>
+    <span class="nav-toggle-bar"></span>
+  </button>
+</nav>
+
+<!-- ===== HERO ===== -->
+<header class="impl-hero">
+  <div class="container narrow">
+    <p class="crumb">
+      <a href="/">R2K</a><span class="sep">/</span>
+      <a href="/#levels">Levels</a><span class="sep">/</span>
+      <span>Level 1 · Identify</span>
+    </p>
+
+    <div class="impl-eyebrow">L1 · Identify · 5 行 Dockerfile</div>
+
+    <h1 class="impl-title">從 <em>LABEL</em> 開始</h1>
+
+    <p class="impl-subtitle">
+      把 image 標上身份 — OCI 標準 + R2K 規格 + Vendor 擴充,三個 namespace 各司其職,任何 scanner 秒掃。
+    </p>
+
+    <div class="impl-stats">
+      <div><span class="impl-stat-label">Cost</span><span class="impl-stat-value">1–2 工程週</span></div>
+      <div><span class="impl-stat-label">Win</span><span class="impl-stat-value">90% 查詢秒回</span></div>
+      <div><span class="impl-stat-label">Stack</span><span class="impl-stat-value">Dockerfile · CI · scanner</span></div>
+    </div>
+  </div>
+</header>
+
+<!-- ===== STEPS ===== -->
+<ol class="impl-steps container narrow">
+
+  <li class="impl-step">
+    <div>
+      <span class="step-tag">Dockerfile · 三組 LABEL</span>
+      <h2>用 <em>ARG</em> 接收,用 <em>LABEL</em> 烘進 image</h2>
+      <p>
+        三組 namespace,在同一個 Dockerfile 內各佔一個 prefix。<strong>不要寫死值</strong> —
+        所有「會變」的欄位（commit / branch / tag / build-time / version）都用 <code style="font-family:var(--mono);font-size:.85em;background:var(--paper-deep);padding:.05em .35em;border:1px solid var(--rule-faint);">ARG</code> 接 build-arg。
+      </p>
+
+      <div class="code-label"><span class="file">Dockerfile</span><span class="lang">dockerfile</span></div>
+<pre class="code-block"><code><span class="c"># syntax=docker/dockerfile:1.7</span>
+
+<span class="c"># ─── Build args (CI 端注入,build 當下決定) ───</span>
+<span class="k">ARG</span> VERSION
+<span class="k">ARG</span> COMMIT_SHA
+<span class="k">ARG</span> GIT_BRANCH
+<span class="k">ARG</span> GIT_TAG=<span class="s">""</span>
+<span class="k">ARG</span> BUILD_TIME
+
+<span class="k">FROM</span> nginx:1.27-alpine
+
+<span class="c"># ─── Group 1 · OCI standard (任何工具都讀得懂) ───</span>
+<span class="k">LABEL</span> <span class="ns">org.opencontainers.image</span>.title=<span class="s">"acme-api"</span> \
+      <span class="ns">org.opencontainers.image</span>.version=<span class="s">"<span class="v">${VERSION}</span>"</span> \
+      <span class="ns">org.opencontainers.image</span>.revision=<span class="s">"<span class="v">${COMMIT_SHA}</span>"</span> \
+      <span class="ns">org.opencontainers.image</span>.created=<span class="s">"<span class="v">${BUILD_TIME}</span>"</span> \
+      <span class="ns">org.opencontainers.image</span>.source=<span class="s">"https://github.com/acme/acme-api"</span> \
+      <span class="ns">org.opencontainers.image</span>.vendor=<span class="s">"Acme Inc."</span> \
+      <span class="ns">org.opencontainers.image</span>.licenses=<span class="s">"Apache-2.0"</span>
+
+<span class="c"># ─── Group 2 · R2K spec (R2K 工具鏈專用) ───</span>
+<span class="k">LABEL</span> <span class="ns">dev.releaseasknowledge</span>.version=<span class="s">"1.0"</span> \
+      <span class="ns">dev.releaseasknowledge</span>.level=<span class="s">"1"</span> \
+      <span class="ns">dev.releaseasknowledge</span>.commit=<span class="s">"<span class="v">${COMMIT_SHA}</span>"</span> \
+      <span class="ns">dev.releaseasknowledge</span>.branch=<span class="s">"<span class="v">${GIT_BRANCH}</span>"</span> \
+      <span class="ns">dev.releaseasknowledge</span>.tag=<span class="s">"<span class="v">${GIT_TAG}</span>"</span> \
+      <span class="ns">dev.releaseasknowledge</span>.build-time=<span class="s">"<span class="v">${BUILD_TIME}</span>"</span> \
+      <span class="ns">dev.releaseasknowledge</span>.repo=<span class="s">"https://github.com/acme/acme-api"</span>
+
+<span class="c"># ─── Group 3 · Vendor extension (反向域名,自家業務) ───</span>
+<span class="k">LABEL</span> <span class="ns">com.acme</span>.case_type=<span class="s">"api"</span> \
+      <span class="ns">com.acme</span>.build_id=<span class="s">"<span class="v">${COMMIT_SHA}</span>"</span>
+
+<span class="c"># ─── 你原本就有的東西 ───</span>
+<span class="k">COPY</span> ./dist /usr/share/nginx/html
+<span class="k">EXPOSE</span> 80
+</code></pre>
+
+      <p>
+        <strong>三條原則：</strong>
+      </p>
+      <ul>
+        <li>OCI 用 <code style="font-family:var(--mono);font-size:.85em;">org.opencontainers.image.*</code> — 寫給<em>所有</em> container 工具看（Trivy / Cosign / docker inspect 原生支援）</li>
+        <li>R2K 用 <code style="font-family:var(--mono);font-size:.85em;">dev.releaseasknowledge.*</code> — 寫給 R2K 工具鏈讀（CLI / scanner / diff plugin）</li>
+        <li>自家欄位用<em>反向域名</em>（<code style="font-family:var(--mono);font-size:.85em;">com.&lt;yourco&gt;.*</code>）— 不汙染標準 namespace</li>
+      </ul>
+    </div>
+  </li>
+
+  <li class="impl-step">
+    <div>
+      <span class="step-tag">CI · build-arg 注入</span>
+      <h2>讓 <em>git</em> 串成 build 那一刻的事實</h2>
+      <p>
+        所有的「真相」都來自 <code style="font-family:var(--mono);font-size:.85em;">git</code>:commit / branch / tag,
+        加上 <code style="font-family:var(--mono);font-size:.85em;">date -u</code> 的 build time。
+        <strong>不要</strong>另外維護一個 <code style="font-family:var(--mono);font-size:.85em;">VERSION.txt</code> 讓人手動改 — 那會變成第二份 source of truth,終究會跟 git 不一致。
+      </p>
+
+      <div class="code-label"><span class="file">scripts/build.sh</span><span class="lang">bash</span></div>
+<pre class="code-block"><code><span class="c">#!/usr/bin/env bash</span>
+<span class="k">set</span> -euo pipefail
+
+<span class="c"># 一切從 git 來,不從手動維護的檔案來</span>
+VERSION=<span class="s">"${VERSION:-$(git describe --tags --always --dirty)}"</span>
+COMMIT_SHA=<span class="s">"$(git rev-parse HEAD)"</span>
+GIT_BRANCH=<span class="s">"$(git rev-parse --abbrev-ref HEAD)"</span>
+GIT_TAG=<span class="s">"$(git tag --points-at HEAD || true)"</span>
+BUILD_TIME=<span class="s">"$(date -u +%Y-%m-%dT%H:%M:%SZ)"</span>
+
+<span class="f">docker</span> build \
+  --build-arg VERSION=<span class="s">"<span class="v">${VERSION}</span>"</span> \
+  --build-arg COMMIT_SHA=<span class="s">"<span class="v">${COMMIT_SHA}</span>"</span> \
+  --build-arg GIT_BRANCH=<span class="s">"<span class="v">${GIT_BRANCH}</span>"</span> \
+  --build-arg GIT_TAG=<span class="s">"<span class="v">${GIT_TAG}</span>"</span> \
+  --build-arg BUILD_TIME=<span class="s">"<span class="v">${BUILD_TIME}</span>"</span> \
+  -t acme-api:<span class="s">"<span class="v">${VERSION}</span>"</span> \
+  -t acme-api:<span class="s">"<span class="v">${COMMIT_SHA:0:12}</span>"</span> \
+  .
+</code></pre>
+
+      <p>
+        <strong>GitHub Actions</strong> 版本（直接抄進 <code style="font-family:var(--mono);font-size:.85em;">.github/workflows/build.yml</code>）:
+      </p>
+
+      <div class="code-label"><span class="file">.github/workflows/build.yml</span><span class="lang">yaml</span></div>
+<pre class="code-block"><code><span class="k">name</span>: build
+<span class="k">on</span>: [push]
+
+<span class="k">jobs</span>:
+  <span class="k">build</span>:
+    <span class="k">runs-on</span>: ubuntu-latest
+    <span class="k">steps</span>:
+      - <span class="k">uses</span>: actions/checkout@v4
+        <span class="k">with</span>: { fetch-depth: 0 }   <span class="c"># 需要完整 git history 才有 tag</span>
+
+      - <span class="k">name</span>: Compute build args
+        <span class="k">id</span>: meta
+        <span class="k">run</span>: |
+          <span class="f">echo</span> <span class="s">"version=$(git describe --tags --always)"</span> &gt;&gt; <span class="v">$GITHUB_OUTPUT</span>
+          <span class="f">echo</span> <span class="s">"commit=$(git rev-parse HEAD)"</span> &gt;&gt; <span class="v">$GITHUB_OUTPUT</span>
+          <span class="f">echo</span> <span class="s">"branch=${GITHUB_REF_NAME}"</span> &gt;&gt; <span class="v">$GITHUB_OUTPUT</span>
+          <span class="f">echo</span> <span class="s">"tag=$(git tag --points-at HEAD)"</span> &gt;&gt; <span class="v">$GITHUB_OUTPUT</span>
+          <span class="f">echo</span> <span class="s">"build_time=$(date -u +%Y-%m-%dT%H:%M:%SZ)"</span> &gt;&gt; <span class="v">$GITHUB_OUTPUT</span>
+
+      - <span class="k">uses</span>: docker/build-push-action@v5
+        <span class="k">with</span>:
+          <span class="k">context</span>: .
+          <span class="k">push</span>: true
+          <span class="k">tags</span>: ghcr.io/acme/acme-api:<span class="v">${{ steps.meta.outputs.version }}</span>
+          <span class="k">build-args</span>: |
+            VERSION=<span class="v">${{ steps.meta.outputs.version }}</span>
+            COMMIT_SHA=<span class="v">${{ steps.meta.outputs.commit }}</span>
+            GIT_BRANCH=<span class="v">${{ steps.meta.outputs.branch }}</span>
+            GIT_TAG=<span class="v">${{ steps.meta.outputs.tag }}</span>
+            BUILD_TIME=<span class="v">${{ steps.meta.outputs.build_time }}</span>
+</code></pre>
+    </div>
+  </li>
+
+  <li class="impl-step">
+    <div>
+      <span class="step-tag">Verify · scanner 秒讀</span>
+      <h2>不需要 pull 整顆 image,<em>50 ms</em> 就拿到全部 LABEL</h2>
+      <p>
+        Image 一推上 registry,任何工具都能用 <em>兩個 HTTP call、~7 KB</em> 讀完所有 LABEL — 不必 pull 完整 image。
+        本機驗的時候 <code style="font-family:var(--mono);font-size:.85em;">docker inspect</code> 最快,正式驗的時候用 <code style="font-family:var(--mono);font-size:.85em;">oras</code> / <code style="font-family:var(--mono);font-size:.85em;">crane</code> 直接讀 registry。
+      </p>
+
+      <div class="code-label"><span class="file">本機檢查</span><span class="lang">bash</span></div>
+<pre class="code-block"><code><span class="c"># 看所有 LABEL 是否落地</span>
+<span class="p">$</span> <span class="f">docker</span> inspect acme-api:1.2.3 \
+    --format <span class="s">'{{json .Config.Labels}}'</span> | <span class="f">jq</span> .
+
+<span class="c"># 只挑 R2K 的 LABEL</span>
+<span class="p">$</span> <span class="f">docker</span> inspect acme-api:1.2.3 \
+    --format <span class="s">'{{json .Config.Labels}}'</span> \
+  | <span class="f">jq</span> <span class="s">'with_entries(select(.key | startswith("dev.releaseasknowledge.")))'</span>
+</code></pre>
+
+      <p style="margin-top:0.5rem;">輸出（節錄）:</p>
+<div class="output-block"><code>{
+  "dev.releaseasknowledge.build-time": "2026-05-10T14:32:11Z",
+  "dev.releaseasknowledge.commit":     "a1b2c3d4e5f67890abcdef1234567890abcdef12",
+  "dev.releaseasknowledge.branch":     "main",
+  "dev.releaseasknowledge.tag":        "v1.2.3",
+  "dev.releaseasknowledge.level":      "1",
+  "dev.releaseasknowledge.version":    "1.0",
+  "dev.releaseasknowledge.repo":       "https://github.com/acme/acme-api",
+  "org.opencontainers.image.revision": "a1b2c3d4e5f67890abcdef1234567890abcdef12",
+  "org.opencontainers.image.created":  "2026-05-10T14:32:11Z",
+  "org.opencontainers.image.title":    "acme-api",
+  "org.opencontainers.image.version":  "v1.2.3"
+}</code></div>
+
+      <div class="code-label"><span class="file">遠端讀（不需要 pull image）</span><span class="lang">bash</span></div>
+<pre class="code-block"><code><span class="c"># oras 直接從 registry 讀 image config (~7 KB · ~50 ms)</span>
+<span class="p">$</span> <span class="f">oras</span> manifest fetch-config --pretty \
+    registry.acme.com/acme-api:1.2.3
+
+<span class="c"># 或用 crane</span>
+<span class="p">$</span> <span class="f">crane</span> config registry.acme.com/acme-api:1.2.3 | <span class="f">jq</span> .config.Labels
+
+<span class="c"># Trivy 一行掃完整個 registry,1000 image 大約 1 分鐘</span>
+<span class="p">$</span> <span class="f">trivy</span> image --format json --list-all-pkgs \
+    registry.acme.com/acme-api:1.2.3 \
+  | <span class="f">jq</span> .Metadata.ImageConfig.config.Labels
+</code></pre>
+    </div>
+  </li>
+
+</ol>
+
+<!-- ===== CHECKLIST ===== -->
+<div class="container narrow">
+  <div class="checklist">
+    <div class="checklist-eyebrow">Level 1 · 達成 Checklist</div>
+    <h3>勾完這 6 項,你就可以對外宣告「我們是 R2K Level 1」</h3>
+    <ul>
+      <li>OCI 標準 LABEL 完整 — version · revision · created · title · source</li>
+      <li>R2K 規格 LABEL 必填齊 — dev.releaseasknowledge.{version, level, commit, build-time}</li>
+      <li>強烈建議補 branch / tag,湊齊 git 三元組</li>
+      <li>Vendor 擴充走反向域名(<code style="font-family:var(--mono);font-size:.9em;">com.yourco.*</code>),不汙染標準 namespace</li>
+      <li>CI 用 build-arg 動態注入,不能寫死 1.0.0</li>
+      <li>External scanner 可秒掃 — 1000 個 image 應該 &lt; 1 分鐘掃完</li>
+    </ul>
+    <p>→ 達成後可寫進工程 blog / 放進 RFP / 在 README 掛 R2K Level 1 badge</p>
+  </div>
+</div>
+
+<!-- ===== NEXT STEP ===== -->
+<section class="next-step">
+  <div class="container narrow">
+    <p class="next-eyebrow">Next · 下一步</p>
+    <h2 class="next-title">Level 2 · <em>Trust</em> — Snapshot</h2>
+    <p>
+      L1 把<em>身份</em>掛上去了,L2 把<em>事實</em>(OpenAPI / DB schema / config / SBOM)寫進
+      <code style="font-family:var(--mono);font-size:.9em;background:var(--paper);padding:.05em .35em;border:1px solid var(--rule-faint);">/r2k/</code> ,
+      用 <code style="font-family:var(--mono);font-size:.9em;background:var(--paper);padding:.05em .35em;border:1px solid var(--rule-faint);">/r2k/index.yaml</code> 列表 + sha256 防竄改。
+    </p>
+    <span class="pending">L2 實作範例 · coming soon</span>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <div>R2K Manifesto v1 · 2026 年 5 月 · CC BY 4.0</div>
+      <div>
+        <a href="/">← 回首頁</a>
+        <span style="margin: 0 0.5rem; opacity: 0.4;">·</span>
+        <a href="https://github.com/enjtorian/release-as-knowledge" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 20) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
+  });
+
+  const navToggle = document.getElementById('nav-toggle');
+  const navDrawer = document.getElementById('nav-drawer');
+  function closeDrawer() {
+    navDrawer?.classList.remove('open');
+    navToggle?.setAttribute('aria-expanded', 'false');
+  }
+  navToggle?.addEventListener('click', () => {
+    const open = navDrawer.classList.toggle('open');
+    navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  navDrawer?.querySelectorAll('a').forEach(a => a.addEventListener('click', closeDrawer));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
+</script>
+
+</body>
+</html>

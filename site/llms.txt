@@ -19,10 +19,18 @@ This site (`releaseasknowledge.com`) is the manifesto landing page. The full nor
 - [Manifesto · English](https://releaseasknowledge.com/en/): Hero, 8 principles, 4 levels, Mode A/B trade-off table, distinction-vs.
 - [Manifesto · 中文](https://releaseasknowledge.com/): Same content in Traditional Chinese.
 
+## Implementation guides (concrete how-to pages)
+
+- [Level 1 · Identify · Implementation (English)](https://releaseasknowledge.com/en/implement/l1/): Hands-on guide for R2K Level 1 — full Dockerfile with three LABEL namespaces (OCI standard / R2K spec / vendor extension), CI build script + GitHub Actions workflow, and verification via `docker inspect` / `oras` / `crane` / `trivy`. 1–2 engineering weeks to land.
+- [Level 1 · Identify · 實作 (中文)](https://releaseasknowledge.com/implement/l1/): Traditional Chinese counterpart of the same Level 1 implementation guide.
+- L2 / L3 / L4 implementation pages are forthcoming.
+
 ## Articles (curated reading list)
 
 - [The Support Engineer's 30 Minutes (dev.to)](https://dev.to/enjtorian/release-as-knowledge-01-the-support-engineers-30-minutes-4if2): English long-form essay opening R2K from one afternoon support call. Day 01 of the series.
 - [支援工程師的 30 分鐘 (iThome 鐵人賽)](https://ithelp.ithome.com.tw/articles/10399897): Traditional Chinese counterpart of the same Day 01 essay; part of an iThome series.
+- [Starting from LABEL · R2K Level 1 Identify (dev.to)](https://dev.to/enjtorian/release-as-knowledge-02-starting-from-label-r2k-level-1-identify-2dkm): English Day 02 — the entry mechanism for R2K Level 1: 5 lines of Dockerfile + two required LABEL namespaces (OCI standard + dev.releaseasknowledge.*) that change a support team's world.
+- [從 LABEL 開始 · R2K Level 1 Identify (iThome 鐵人賽)](https://ithelp.ithome.com.tw/articles/10399916): Traditional Chinese counterpart of the same Day 02 essay.
 
 ## Core concepts (one line each)
 
